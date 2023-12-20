@@ -30,17 +30,18 @@ const LoginBox = () => {
 
     const transformData = {
       ...data,
-      userName: data.username.toUpperCase()
+      username: data.username.toUpperCase()
     }
 
     OnSubmit({
-      data: transformData
+      data: transformData,
+      messageSuccess: 'Login feito com sucesso!'
     })
   }
 
   const OnSubmit = useSubmitDataPostOrPut({
     urlApi: '/api/auth',
-    urlReturn: '/Dashboard'
+    urlReturn: '/main/dashboard'
   })
 
   return (

@@ -1,5 +1,6 @@
 "use client"
 
+import { ApiError } from '@/@types/ApiError';
 import { api } from '@/libs/api';
 import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
@@ -34,7 +35,6 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPu
             event.preventDefault()
         }
         try {
-            console.log(data)
             let response
             if (id) {
                 response = await api.put(`${urlApi}${id}`, data);
@@ -46,13 +46,14 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPu
                     localStorage.setItem('authToken', response.data.token)
                 }
                 toast.success(messageSuccess)
-                console.log(response.data)
+                console.log(response.data.token)
             }
 
             router.push(urlReturn);
         } catch (error: any) {
-            if (error.response) {
-                const apiErrorMessage = error.response.data || 'Erro desconhecido ao processar a solicitação';
+            const apiError = error as ApiError
+            if (apiError.response) {
+                const apiErrorMessage = apiError.response.data || 'Erro desconhecido ao processar a solicitação';
                 toast.error(apiErrorMessage);
             } else {
                 toast.error(messageError);
