@@ -1,9 +1,12 @@
 import { MenuOptionsProps, Option } from "@/@types/MenuOptions";
 import { useRouter } from "next/navigation";
 
-const MenuOptions: React.FC<MenuOptionsProps> = ({
+type MenuOptionsPropsWithIsOpen = MenuOptionsProps & { setIsOpen: (value: boolean) => void }
+
+const MenuOptions: React.FC<MenuOptionsPropsWithIsOpen> = ({
     ItemsForSection,
     TitleSection,
+    setIsOpen
 }) => {
     const router = useRouter();
 
@@ -13,6 +16,7 @@ const MenuOptions: React.FC<MenuOptionsProps> = ({
         } else if (item.function) {
             item.function();
         }
+        setIsOpen(false)
     };
 
     return (
@@ -20,15 +24,15 @@ const MenuOptions: React.FC<MenuOptionsProps> = ({
 
             <h3
                 className="
-                text-center
-                py-2
-                mb-4
-                bg-black
-                rounded-full
-                text-white
-                border-2
-                font-bold
-              "
+                    text-center
+                    py-2
+                    mb-4
+                    bg-black
+                    rounded-full
+                    text-white
+                    border-2
+                    font-bold
+                "
             >
                 {TitleSection}
             </h3>
@@ -38,12 +42,13 @@ const MenuOptions: React.FC<MenuOptionsProps> = ({
                     key={item.title}
                     onClick={() => handleClick(item)}
                     className="
-                    bg-gradient-to-t
-                    bg-black         
-                    p-2 
-                    text-start
-                    cursor-pointer
-                    hover:bg-neutral-600
+                        bg-gradient-to-t
+                        bg-black         
+                        p-2 
+                        text-start
+                        cursor-pointer
+                        hover:bg-neutral-600
+                        mt-[1px]
                     "
                 >
                     {item.title}

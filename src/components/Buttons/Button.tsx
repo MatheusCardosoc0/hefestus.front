@@ -22,10 +22,10 @@ const Button: React.FC<ButtonProps> = ({
                 text-md
                 w-full
                 ${customStyle}
-                ${variantColor === 'blue' && 'bg-sky-400 text-white hover:bg-sky-500'}
+                ${variantColor === 'blue' && 'bg-sky-500 text-white hover:bg-sky-700'}
                 ${variantColor === 'yellow' && 'bg-yellow-400 text-white hover:bg-yellow-500'}
                 ${variantColor === 'red' && 'bg-red-400 text-white hover:bg-red-500'}
-                ${variantColor === 'green' && 'bg-green-400 text-white hover:bg-green-500'}
+                ${variantColor === 'green' && 'bg-green-500 text-white hover:bg-green-600'}
           `}
         >
             {text}

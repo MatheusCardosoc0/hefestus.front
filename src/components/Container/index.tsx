@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import LateralMenu from "./LateralMenu"
+import MainContainer from "./MainContainer"
 
 interface ContainerProps {
     children: ReactNode
@@ -15,13 +16,9 @@ const Container: React.FC<ContainerProps> = ({
           "
         >
             <LateralMenu />
-            <main
-                className="
-                    
-                "
-            >
+            <MainContainer>
                 {children}
-            </main>
+            </MainContainer>
         </div>
     )
 }

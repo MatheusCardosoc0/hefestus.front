@@ -11,12 +11,12 @@ export const CheckAuthToken = () => {
     const token = localStorage.getItem("authToken")
     const router = useRouter()
 
-    const { setUser } = useCurrentUser()
+    const { setUser, user } = useCurrentUser()
 
     const Verification = async () => {
         try {
             const response = await api.get(`/api/auth/${token}`)
-            setUser(response.data)
+            setUser(user.userName == null && response.data)
             console.log(response.data)
         } catch (error) {
             const apiError = error as ApiError

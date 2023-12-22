@@ -7,5 +7,4 @@ export type Option = {
 export interface MenuOptionsProps {
     TitleSection: string;
     ItemsForSection: Option[];
-    isOpen: boolean
 }

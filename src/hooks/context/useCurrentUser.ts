@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 type UserProps = {
-    userName: string,
-    UrlImage: string
+    userName: string | null,
+    UrlImage: string | null
 }
 
 interface useCurrentUserProps {
