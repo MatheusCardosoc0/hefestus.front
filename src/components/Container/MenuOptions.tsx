@@ -20,7 +20,7 @@ const MenuOptions: React.FC<MenuOptionsPropsWithIsOpen> = ({
     };
 
     return (
-        <ul className="w-[140px] bg-transparent absolute right-[130%] top-0 Fade drop-shadow-[1px_1px_2px_#0000006f]">
+        <ul className="w-[140px] bg-transparent absolute right-[130%] top-12 Fade drop-shadow-[1px_1px_2px_#0000006f]">
 
             <h3
                 className="

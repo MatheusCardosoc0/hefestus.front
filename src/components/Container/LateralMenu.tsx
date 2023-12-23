@@ -4,7 +4,7 @@
 import { CheckAuthToken } from "@/hooks/api/CheckAuthToken"
 import { useCurrentUser } from "@/hooks/context/useCurrentUser"
 import { Button } from "../Buttons"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import MenuOptions from "./MenuOptions"
 import { MenuOptionsProps, Option } from "@/@types/MenuOptions"
 import { usuarioOptions } from "@/constants/usuarioOptions"
@@ -19,7 +19,7 @@ const LateralMenu = () => {
 
     const [menuItems, setMenuItems] = useState<MenuOptionsProps>({} as MenuOptionsProps)
 
-    CheckAuthToken()
+    // CheckAuthToken(false)
 
     const { isOpen, setIsOpen } = useIsOpenSectionOptionsMenu()
 
@@ -34,22 +34,32 @@ const LateralMenu = () => {
         setIsOpen(true)
     }
 
+    useEffect(() => {
+        if (isOpen == false) {
+            setMenuItems({
+                TitleSection: '',
+                ItemsForSection: []
+            })
+        }
+    }, [isOpen])
+
     return (
         <div
             className="
-                w-[140px]
+                w-[24%]
+                md:w-[18%]
+                lg:w-[12%]
+                xl:w-[10%]
                 bg-black
                 p-2
-                h-[98%]
+                h-full
+                min-h-[98vh]
                 flex
                 flex-col
                 items-center
                 rounded-xl
-                absolute
-                right-1
-                top-1/2
-                -translate-y-1/2
-                py-8
+                mr-2
+                mt-2
           "
         >
             <div
@@ -105,7 +115,7 @@ const LateralMenu = () => {
                         <li
                             key={item.title}
                             onClick={() => handleChangeSection(item.optionsList, item.title)}
-                            className="
+                            className={`
                               bg-white
                               rounded-xl
                               font-bold
@@ -115,7 +125,8 @@ const LateralMenu = () => {
                               text-center
                               cursor-pointer
                               hover:bg-neutral-400
-                            "
+                              ${menuItems.TitleSection == item.title && 'bg-neutral-400'}
+                            `}
                         >
                             {item.title}
                         </li>

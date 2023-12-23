@@ -17,3 +17,26 @@
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
 }
+
+.CustomScroll {
+    scrollbar-width: thin;
+    scrollbar-color: #000000 #F5F5F5;
+}
+
+.CustomScroll::-webkit-scrollbar {
+    height: 16px;
+    width: 8px;
+    background-color: #d0d0d0;
+}
+
+.CustomScroll::-webkit-scrollbar-thumb {
+    background-color: #0560d7;
+}
+
+.CustomScroll::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+}
+
+.InsetShadow {
+    box-shadow: inset 1.4px 1.4px 0px rgb(0, 0, 0);
+}

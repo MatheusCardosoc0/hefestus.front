@@ -7,7 +7,7 @@ import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
-export const CheckAuthToken = () => {
+export const CheckAuthToken = (isLogin: boolean) => {
     const token = localStorage.getItem("authToken")
     const router = useRouter()
 
@@ -18,6 +18,7 @@ export const CheckAuthToken = () => {
             const response = await api.get(`/api/auth/${token}`)
             setUser(user.userName == null && response.data)
             console.log(response.data)
+            if (isLogin) { router.push('/main/dashboard') }
         } catch (error) {
             const apiError = error as ApiError
             if (apiError.response) {

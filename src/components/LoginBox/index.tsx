@@ -5,6 +5,7 @@ import { TextFiled } from '../Inputs'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import useSubmitDataPostOrPut from '@/hooks/api/useSubmitDataPostOrPut'
+import { CheckAuthToken } from '@/hooks/api/CheckAuthToken'
 
 const schema = z.object({
   username: z.string()
@@ -25,6 +26,8 @@ const LoginBox = () => {
   } = useForm<FormLoginData>({
     resolver: zodResolver(schema)
   })
+
+  CheckAuthToken(true)
 
   const onSubmit = (data: FormLoginData) => {
 

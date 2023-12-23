@@ -15,10 +15,10 @@ const Container: React.FC<ContainerProps> = ({
               flex
           "
         >
-            <LateralMenu />
             <MainContainer>
                 {children}
             </MainContainer>
+            <LateralMenu />
         </div>
     )
 }
