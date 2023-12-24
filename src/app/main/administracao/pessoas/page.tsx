@@ -1,6 +1,8 @@
 "use client"
 
-import Table from "@/components/Table"
+import Table from "@/components/Table";
+import aaTable from "@/components/Table/BasicTable"
+import FilterForTable from "@/components/Table/FilterForTable";
 import { useGetDataList } from "@/hooks/api/useGetDataList"
 import { useState } from "react";
 
@@ -14,13 +16,20 @@ function Pessoas() {
     useGetDataList(setFilteredPersons, setAllPersons, 'api/person', setLoading)
 
     return (
-        <div>
+        <div
+            className="
+            flex
+            flex-col
+            gap-12
+          "
+        >
             <Table
-                data={filteredPersons}
-                navigateTo={"change"}
+                dataList={allPersons}
+                setFilteredDataList={setFilteredPersons}
+                filteredData={filteredPersons}
                 isLoading={loading}
                 columns={[
-                    { label: "ID", field: "id" },
+                    { label: "Código", field: "id" },
                     { label: "Nome", field: "name" },
                     { label: "Email", field: "email" },
                     { label: "Telefone", field: "phone" },
