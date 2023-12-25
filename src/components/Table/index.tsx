@@ -11,18 +11,20 @@ const Table: React.FC<TableProps> = ({
     isLoading,
     navigateTo,
     setFilteredDataList,
-    LabelId,
-    LabelName,
     setValueFunction,
     setValueObject
 }) => {
     return (
-        <>
+        <div
+            className="
+                flex
+                flex-col
+                gap-12
+            "
+        >
             <FilterForTable
                 dataList={dataList}
                 setFilteredDataList={setFilteredDataList}
-                LabelId={LabelId}
-                LabelName={LabelName}
                 columns={columns}
             />
             <BasicTable
@@ -33,7 +35,7 @@ const Table: React.FC<TableProps> = ({
                 setValueFunction={setValueFunction}
                 setValueObject={setValueObject}
             />
-        </>
+        </div>
     )
 }
 

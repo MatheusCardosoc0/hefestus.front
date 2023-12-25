@@ -10,6 +10,7 @@ interface TextFieldProps {
     disabled?: boolean;
     id: string;
     isUppercase?: boolean;
+    customStyle?: string
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -20,6 +21,7 @@ const TextField: React.FC<TextFieldProps> = ({
     disabled,
     id,
     isUppercase,
+    customStyle
 }) => {
     const [typeTextField, setTypeTextField] = useState(type);
     const [isFocused, setIsFocused] = useState(false);
@@ -43,10 +45,12 @@ const TextField: React.FC<TextFieldProps> = ({
                     disabled={disabled}
                     type={typeTextField}
                     autoComplete="off"
-                    className={`w-full p-2 border 
+                    className={`w-full p-2 border-2 border-neutral-500
                     ${error ? 'border-red-500' : 'border-gray-300'}
                     ${isUppercase && 'uppercase'}
-                    rounded-md focus:outline-none focus:border-blue-500`}
+                    rounded-md focus:outline-none focus:border-blue-500
+                    ${customStyle}
+                    `}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                 />

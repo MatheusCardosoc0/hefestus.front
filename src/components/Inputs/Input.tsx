@@ -9,6 +9,7 @@ interface InputProps {
     value?: string | number
     disabled?: boolean;
     id: string
+    customStyle: string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -17,7 +18,8 @@ const Input: React.FC<InputProps> = ({
     disabled,
     onChange,
     value,
-    id
+    id,
+    customStyle
 }) => {
     const [typeInput, setTypeInput] = useState(type);
     const [isFocused, setIsFocused] = useState(false);
@@ -42,7 +44,7 @@ const Input: React.FC<InputProps> = ({
                     type={typeInput}
                     autoComplete="true"
                     className={`w-full p-2 border-2 border-neutral-400 
-                    rounded-md focus:outline-none focus:border-blue-500`}
+                    rounded-md focus:outline-none focus:border-blue-500 ${customStyle}`}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                 />

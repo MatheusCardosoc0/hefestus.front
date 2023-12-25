@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input } from '../Inputs';
+import { Input, Select } from '../Inputs';
 import { Button } from '../Buttons';
 import { Search } from 'lucide-react';
 import { Column } from './BasicTable';
@@ -7,21 +7,16 @@ import { Column } from './BasicTable';
 export interface FilterForTableProps {
     dataList: any[]
     setFilteredDataList: (value: any) => void
-    LabelId?: string
-    LabelName?: string
     columns: Column[]
 }
 
 const FilterForTable: React.FC<FilterForTableProps> = ({
     dataList,
     setFilteredDataList,
-    LabelId = 'Código:',
-    LabelName = 'Nome:',
     columns
 }) => {
-    const [isSearchTermId, setIsSearchTermId] = useState('')
     const [isSearchTermName, setIsSearchTermName] = useState('')
-    const [currentLabelName, setCurrentLabelName] = useState<string>(LabelName)
+    const [currentLabelName, setCurrentLabelName] = useState<string>('Código:')
 
     const filterData = () => {
         const currentField: any = columns.find(column => column.label === currentLabelName)?.field;
@@ -73,20 +68,21 @@ const FilterForTable: React.FC<FilterForTableProps> = ({
         >
             <div
                 className='
-              flex
-              items-end
-              gap-2
-            '
+                    flex
+                    items-end
+                    gap-2
+                    '
             >
                 <Input
                     id="Id"
-                    label={LabelId}
-                    onChange={e => setIsSearchTermId(e.target.value)}
-                    value={isSearchTermId}
+                    label={currentLabelName}
+                    onChange={e => setIsSearchTermName(e.target.value)}
+                    value={isSearchTermName}
                 />
 
-                <select
+                <Select
                     onChange={e => setCurrentLabelName(e.target.value)}
+                    label='Pesquisar por:'
                 >
                     {columns.map(item => (
                         <option
@@ -96,7 +92,7 @@ const FilterForTable: React.FC<FilterForTableProps> = ({
                             {item.label}
                         </option>
                     ))}
-                </select>
+                </Select>
             </div>
             <div
                 className='
@@ -105,16 +101,10 @@ const FilterForTable: React.FC<FilterForTableProps> = ({
                 gap-2
               '
             >
-                <Input
-                    label={currentLabelName}
-                    id='Name'
-                    onChange={e => setIsSearchTermName(e.target.value)}
-                    value={isSearchTermName}
-                />
                 <Button
                     variantColor='blue'
                     onClick={() => filterData()}
-                    customStyle='text-xl rounded-md'
+                    customStyle='text-xl rounded-md max-h-[50px] mt-2'
                 >
                     <Search
                         size={32}

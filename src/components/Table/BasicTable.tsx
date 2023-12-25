@@ -73,7 +73,8 @@ const BasicTable: React.FC<BasicTableProps> = ({
         else if (setValueObject) {
             setValueFunction({ ...row })
         } else {
-            router.push(`/${navigateTo}/${row.id}`)
+            const path = window.location.pathname
+            router.push(`${path}/${navigateTo}/${row.id}`)
         }
     }
 
