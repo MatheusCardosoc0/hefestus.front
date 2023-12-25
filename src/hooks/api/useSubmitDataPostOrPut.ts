@@ -3,16 +3,17 @@
 import { ApiError } from '@/@types/ApiError';
 import { api } from '@/libs/api';
 import { useRouter } from 'next/navigation';
-import { FormEvent } from 'react';
+import { Dispatch, FormEvent, MouseEventHandler, SetStateAction } from 'react';
 import toast from 'react-hot-toast';
 
 interface UseSubmitDataPostOrPutProps {
     urlApi: string
-    urlReturn: string
+    urlReturn?: string
     id?: number
+    setOpenModal?: Dispatch<SetStateAction<boolean>>
 }
 
-interface HandleSubmitProps {
+interface SubmitDataProps {
     data: Object
     event?: FormEvent
     messageSuccess?: string
@@ -20,17 +21,17 @@ interface HandleSubmitProps {
     messageSuccessChange?: string
 }
 
-const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPutProps) => {
+const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal }: UseSubmitDataPostOrPutProps) => {
 
     const router = useRouter();
 
-    async function handleSubmit({
+    async function submitData({
         data,
         event,
         messageError = 'Não foi possivel fazer o registro',
         messageSuccess = "Registrado com sucesso",
         messageSuccessChange = "Alterado com sucesso"
-    }: HandleSubmitProps) {
+    }: SubmitDataProps) {
         if (event) {
             event.preventDefault()
         }
@@ -49,7 +50,9 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPu
                 console.log(response.data.token)
             }
 
-            router.push(urlReturn);
+            if (urlReturn) { router.push(urlReturn); }
+            if (setOpenModal) { setOpenModal(false) }
+
         } catch (error: any) {
             const apiError = error as ApiError
             if (apiError.response) {
@@ -62,7 +65,7 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPu
         }
     }
 
-    return handleSubmit;
+    return { submitData };
 };
 
 export default useSubmitDataPostOrPut;

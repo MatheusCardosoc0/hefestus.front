@@ -8,10 +8,12 @@ function Pessoas() {
 
     const [allPersons, setAllPersons] = useState([]);
     const [filteredPersons, setFilteredPersons] = useState([]);
-    const [loading, setLoading] = useState(false)
 
-
-    useGetDataList(setFilteredPersons, setAllPersons, 'api/person', setLoading)
+    const { error, loading } = useGetDataList({
+        setData: setAllPersons,
+        setDataFilter: setFilteredPersons,
+        url: 'api/person'
+    })
 
     return (
         <Table

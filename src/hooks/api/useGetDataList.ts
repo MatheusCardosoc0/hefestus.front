@@ -1,32 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../libs/api';
 import toast from 'react-hot-toast';
 
-export const useGetDataList = (
-    setDataFilter: (data: any) => void,
+interface UseGetDataListProps {
+    setDataFilter?: (data: any) => void,
     setData: (data: any) => void,
     url: string,
-    setIsLoading: (isLoading: boolean) => void
-): void => {
+    kitten?: any
+}
+
+export const useGetDataList = ({
+    setDataFilter,
+    setData,
+    kitten,
+    url }: UseGetDataListProps
+) => {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (setIsLoading) {
-                setIsLoading(true);
-            }
+
+            setLoading(true);
+
             try {
                 const response = await api.get(url);
                 setData(response.data);
-                setDataFilter(response.data);
-            } catch (error) {
+                if (setDataFilter) {
+                    setDataFilter(response.data);
+                }
+            } catch (error: any) {
                 toast.error("Não foi possível pegar os dados da API");
                 console.error('Error:', error);
+                setError(error)
             }
-            if (setIsLoading) {
-                setIsLoading(false);
-            }
+
+            setLoading(false);
+
         };
 
         fetchData();
-    }, [setData, setDataFilter, url]);
+    }, [url, kitten]);
+
+    return { error, loading }
 };

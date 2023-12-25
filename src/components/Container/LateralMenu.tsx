@@ -12,6 +12,7 @@ import { administracaoOptions } from "@/constants/administracaoOptions"
 import { useIsOpenSectionOptionsMenu } from "@/hooks/context/useIsOpenSectionOptionsMenu"
 import { SectionsOptions } from "@/constants/SectionsOptions"
 import { StarIcon, BarChart3 } from 'lucide-react'
+import Link from "next/link"
 
 const LateralMenu = () => {
 
@@ -101,12 +102,13 @@ const LateralMenu = () => {
                         <StarIcon />
                         Favoritos
                     </button>
-                    <button
+                    <Link
+                        href={"/main/dashboard"}
                         className="w-[90%] bg-black text-white border border-white font-bold p-2 flex gap-2 rounded-md hover:text-yellow-400 hover:border-yellow-400 mt-2"
                     >
                         <BarChart3 />
                         Dashboard
-                    </button>
+                    </Link>
                 </div>
                 <ul
                     className="text-white flex flex-col gap-2"
@@ -116,7 +118,6 @@ const LateralMenu = () => {
                             key={item.title}
                             onClick={() => handleChangeSection(item.optionsList, item.title)}
                             className={`
-                              bg-white
                               rounded-xl
                               font-bold
                               text-black
@@ -125,7 +126,7 @@ const LateralMenu = () => {
                               text-center
                               cursor-pointer
                               hover:bg-neutral-400
-                              ${menuItems.TitleSection == item.title && 'bg-neutral-400'}
+                              ${menuItems.TitleSection == item.title ? 'bg-neutral-400' : 'bg-white'}
                             `}
                         >
                             {item.title}

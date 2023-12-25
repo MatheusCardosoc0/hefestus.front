@@ -73,14 +73,15 @@ const MainContainer = ({ children }: { children: ReactNode }) => {
                 <h2>
                     {extractNameFromUrl(url)}
                 </h2>
-                <Button
-                    onClick={() => setIsOpenOptionsNavigationMenu(prev => !prev)}
-                    variantColor="white"
-                    customStyle="text-sm max-w-[100px] rounded-lg"
-                >
-                    Opções
-                </Button>
-
+                {!url.includes("dashboard") && (
+                    <Button
+                        onClick={() => setIsOpenOptionsNavigationMenu(prev => !prev)}
+                        variantColor="white"
+                        customStyle="text-sm max-w-[100px] rounded-lg"
+                    >
+                        Opções
+                    </Button>
+                )}
                 {isOpenOptionsNavigationMenu && (
                     <ul
                         className="

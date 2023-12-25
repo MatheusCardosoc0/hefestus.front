@@ -1,12 +1,15 @@
-import { ReactNode, useState } from 'react';
+import { RefreshCcw, UserPlus } from 'lucide-react';
+import { MouseEventHandler, ReactNode, SelectHTMLAttributes, useState } from 'react';
+import { Button } from '../Buttons';
 
-interface SelectProps {
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
     onChange: (value: any) => void
     disabled?: boolean;
     id?: string
     children: ReactNode
     customStyle?: string
+    openModalApiConnection?: () => void
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -15,7 +18,9 @@ const Select: React.FC<SelectProps> = ({
     onChange,
     id,
     children,
-    customStyle
+    customStyle,
+    openModalApiConnection,
+    ...props
 }) => {
     const [isFocused, setIsFocused] = useState(false);
 
@@ -26,11 +31,12 @@ const Select: React.FC<SelectProps> = ({
             `}>
                 {label}
             </label>
-            <div className="relative">
+            <div className="relative flex gap-1">
                 <select
                     id={id}
                     onChange={onChange}
                     disabled={disabled}
+                    {...props}
                     autoComplete="true"
                     className={`w-full p-2 border-2 border-neutral-400 
                     rounded-md focus:outline-none focus:border-blue-500 ${customStyle}`}
@@ -39,6 +45,30 @@ const Select: React.FC<SelectProps> = ({
                 >
                     {children}
                 </select>
+                {openModalApiConnection && (
+                    <div
+                        className='
+                        flex
+                        gap-1
+                      '
+                    >
+                        <Button
+                            variantColor='blue'
+                            customStyle='rounded-lg'
+                            type='button'
+                        >
+                            <RefreshCcw />
+                        </Button>
+                        <Button
+                            variantColor='green'
+                            customStyle='rounded-lg'
+                            onClick={openModalApiConnection}
+                            type='button'
+                        >
+                            <UserPlus />
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );

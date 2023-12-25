@@ -15,7 +15,6 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             {...props}
-            type='submit'
             className={`
                 p-2     
                 font-bold
