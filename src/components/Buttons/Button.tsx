@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react"
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode
     customStyle?: string,
-    variantColor?: 'blue' | 'yellow' | 'red' | 'green' | 'white'
+    variantColor?: 'blue' | 'yellow' | 'red' | 'green' | 'white' | 'orange'
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -25,6 +25,7 @@ const Button: React.FC<ButtonProps> = ({
                 gap-2
                 ${customStyle}
                 ${variantColor === 'blue' && 'bg-blue-500 text-white hover:bg-blue-700'}
+                ${variantColor === 'orange' && 'bg-orange-500 text-white hover:bg-orange-700'}
                 ${variantColor === 'white' && 'bg-white text-black hover:bg-neutral-400'}
                 ${variantColor === 'yellow' && 'bg-yellow-400 text-white hover:bg-yellow-500'}
                 ${variantColor === 'red' && 'bg-red-400 text-white hover:bg-red-500'}

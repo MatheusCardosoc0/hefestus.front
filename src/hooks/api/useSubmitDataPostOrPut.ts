@@ -11,6 +11,7 @@ interface UseSubmitDataPostOrPutProps {
     urlReturn?: string
     id?: number
     setOpenModal?: Dispatch<SetStateAction<boolean>>
+    dispatchKitten?: Dispatch<SetStateAction<boolean>>
 }
 
 interface SubmitDataProps {
@@ -21,7 +22,7 @@ interface SubmitDataProps {
     messageSuccessChange?: string
 }
 
-const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal }: UseSubmitDataPostOrPutProps) => {
+const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal, dispatchKitten }: UseSubmitDataPostOrPutProps) => {
 
     const router = useRouter();
 
@@ -52,6 +53,7 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal }: UseSubm
 
             if (urlReturn) { router.push(urlReturn); }
             if (setOpenModal) { setOpenModal(false) }
+            if (dispatchKitten) { dispatchKitten(prev => !prev) }
 
         } catch (error: any) {
             const apiError = error as ApiError

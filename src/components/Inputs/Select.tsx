@@ -1,4 +1,4 @@
-import { RefreshCcw, UserPlus } from 'lucide-react';
+import { PenLine, RefreshCcw, UserPlus } from 'lucide-react';
 import { MouseEventHandler, ReactNode, SelectHTMLAttributes, useState } from 'react';
 import { Button } from '../Buttons';
 
@@ -9,7 +9,8 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     id?: string
     children: ReactNode
     customStyle?: string
-    openModalApiConnection?: () => void
+    openModalApiConnectionPost?: () => void
+    openModalApiConnectionPut?: () => void
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -19,7 +20,8 @@ const Select: React.FC<SelectProps> = ({
     id,
     children,
     customStyle,
-    openModalApiConnection,
+    openModalApiConnectionPost,
+    openModalApiConnectionPut,
     ...props
 }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -45,30 +47,33 @@ const Select: React.FC<SelectProps> = ({
                 >
                     {children}
                 </select>
-                {openModalApiConnection && (
-                    <div
-                        className='
+                <div
+                    className='
                         flex
                         gap-1
                       '
-                    >
+                >
+                    {openModalApiConnectionPut && (
                         <Button
-                            variantColor='blue'
-                            customStyle='rounded-lg'
                             type='button'
+                            variantColor='orange'
+                            customStyle='rounded-lg'
+                            onClick={openModalApiConnectionPut}
                         >
-                            <RefreshCcw />
+                            <PenLine />
                         </Button>
+                    )}
+                    {openModalApiConnectionPost && (
                         <Button
+                            type='button'
                             variantColor='green'
                             customStyle='rounded-lg'
-                            onClick={openModalApiConnection}
-                            type='button'
+                            onClick={openModalApiConnectionPost}
                         >
                             <UserPlus />
                         </Button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

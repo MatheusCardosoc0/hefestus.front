@@ -36,10 +36,9 @@ const MainContainer = ({ children }: { children: ReactNode }) => {
         }
 
         const newPath = '/' + pathSegments.join('/');
+        setIsOpenOptionsNavigationMenu(false)
         router.push(newPath);
     }
-
-
 
 
     return (

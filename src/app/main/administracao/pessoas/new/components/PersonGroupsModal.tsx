@@ -16,10 +16,14 @@ type PersonGroupForm = z.infer<typeof personGroupSchema>
 
 interface PersonGroupsModalProps {
     setOpenModal: Dispatch<SetStateAction<boolean>>
+    dispatchKitten: Dispatch<SetStateAction<boolean>>
+    personGroupId: number
 }
 
 const PersonGroupsModal: React.FC<PersonGroupsModalProps> = ({
-    setOpenModal
+    setOpenModal,
+    dispatchKitten,
+    personGroupId
 }) => {
 
     const {
@@ -31,8 +35,10 @@ const PersonGroupsModal: React.FC<PersonGroupsModalProps> = ({
     })
 
     const { submitData } = useSubmitDataPostOrPut({
-        urlApi: '/api/personGroup',
-        setOpenModal: setOpenModal
+        urlApi: '/api/personGroup/',
+        setOpenModal: setOpenModal,
+        dispatchKitten: dispatchKitten,
+        id: personGroupId
     })
 
     const onSubmit = (data: PersonGroupForm) => {

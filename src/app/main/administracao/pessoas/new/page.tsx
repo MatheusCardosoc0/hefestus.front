@@ -12,6 +12,7 @@ import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 import PersonGroupsModal, { personGroupSchema } from "./components/PersonGroupsModal";
+import { handleSetObjectForSelectValue } from "@/functions/handleSetObjectForSelectValue";
 
 
 
@@ -68,23 +69,38 @@ function NovaPessoa() {
     const [cities, setCities] = useState([])
     const [personGroupsList, setPersonGroupsList] = useState([])
     const [isOpenModalPersonGroups, setIsOpenModalPersonGroups] = useState(false)
+    const [currentId, setCurrentId] = useState(0)
+    const [kittenPostPersonGroups, setKittenPostPersonGroups] = useState(false)
 
     const urlImage = watch('urlImage')
 
-    const { error, loading } = useGetDataById({
+    const personGroup = watch('personGroup')
+    const city = watch('city')
+
+    const { } = useGetDataById({
         id: state,
         setData: setCities,
         urlApi: '/api/fetchCityDataIBGE/fetchData/'
     })
 
-    const { error: errorGetGroups, loading: loadingGetGroups } = useGetDataList({
+    const { } = useGetDataList({
         setData: setPersonGroupsList,
         url: '/api/personGroup',
-        kitten: isOpenModalPersonGroups
+        kitten: kittenPostPersonGroups
     })
 
-    console.log(state)
+    // console.log(personGroup);
 
+    function HandleOpenModal(type: 'post' | 'put') {
+        if (type == 'post') {
+            setCurrentId(0)
+            setIsOpenModalPersonGroups(true)
+        }
+        if (type == 'put') {
+            setCurrentId(personGroup.id)
+            setIsOpenModalPersonGroups(true)
+        }
+    }
 
     return (
         <>
@@ -145,12 +161,17 @@ function NovaPessoa() {
                     <BreakLineInput>
                         <Select
                             label="Cidade*"
-                            onChange={value => setValue('city', value)}
+                            onChange={e => handleSetObjectForSelectValue(e, setValue, cities, 'city')}
                         >
+                            <option
+                                value={''}
+                            >
+                                Nenhum
+                            </option>
                             {cities.map((item: any) => (
                                 <option
                                     key={item.id}
-                                    value={item}
+                                    value={item.id}
                                 >
                                     {item.name}
                                 </option>
@@ -158,13 +179,19 @@ function NovaPessoa() {
                         </Select>
                         <Select
                             label="Grupo*"
-                            onChange={value => setValue('personGroup', value)}
-                            openModalApiConnection={() => setIsOpenModalPersonGroups(true)}
+                            onChange={e => handleSetObjectForSelectValue(e, setValue, personGroupsList, 'personGroup')}
+                            openModalApiConnectionPost={() => HandleOpenModal('post')}
+                            openModalApiConnectionPut={() => HandleOpenModal('put')}
                         >
+                            <option
+                                value={''}
+                            >
+                                Nenhum
+                            </option>
                             {personGroupsList.map((item: any) => (
                                 <option
                                     key={item.id}
-                                    value={item.name}
+                                    value={item.id}
                                 >
                                     {item.name}
                                 </option>
@@ -255,6 +282,8 @@ function NovaPessoa() {
             {isOpenModalPersonGroups && (
                 <PersonGroupsModal
                     setOpenModal={setIsOpenModalPersonGroups}
+                    dispatchKitten={setKittenPostPersonGroups}
+                    personGroupId={currentId}
                 />
             )}
         </>
