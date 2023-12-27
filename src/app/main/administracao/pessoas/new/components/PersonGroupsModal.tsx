@@ -9,10 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const personGroupSchema = z.object({
+    id: z.number().optional(),
     name: z.string().nonempty({ message: "O nome no grupo de pessoas não pode estar vazio" }),
 });
 
-type PersonGroupForm = z.infer<typeof personGroupSchema>
+export type PersonGroupForm = z.infer<typeof personGroupSchema>
 
 interface PersonGroupsModalProps {
     setOpenModal: Dispatch<SetStateAction<boolean>>

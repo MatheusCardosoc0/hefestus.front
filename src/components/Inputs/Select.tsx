@@ -1,4 +1,4 @@
-import { PenLine, RefreshCcw, UserPlus } from 'lucide-react';
+import { PenLine, RefreshCcw, UserPlus, Wifi } from 'lucide-react';
 import { MouseEventHandler, ReactNode, SelectHTMLAttributes, useState } from 'react';
 import { Button } from '../Buttons';
 
@@ -11,6 +11,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     customStyle?: string
     openModalApiConnectionPost?: () => void
     openModalApiConnectionPut?: () => void
+    openModalApiConnectionGetList?: () => void
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -22,6 +23,7 @@ const Select: React.FC<SelectProps> = ({
     customStyle,
     openModalApiConnectionPost,
     openModalApiConnectionPut,
+    openModalApiConnectionGetList,
     ...props
 }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -57,7 +59,7 @@ const Select: React.FC<SelectProps> = ({
                         <Button
                             type='button'
                             variantColor='orange'
-                            customStyle='rounded-lg'
+                            customStyle='rounded-lg max-w-[36px]'
                             onClick={openModalApiConnectionPut}
                         >
                             <PenLine />
@@ -67,10 +69,20 @@ const Select: React.FC<SelectProps> = ({
                         <Button
                             type='button'
                             variantColor='green'
-                            customStyle='rounded-lg'
+                            customStyle='rounded-lg max-w-[36px]'
                             onClick={openModalApiConnectionPost}
                         >
                             <UserPlus />
+                        </Button>
+                    )}
+                    {openModalApiConnectionGetList && (
+                        <Button
+                            type='button'
+                            variantColor='blue'
+                            customStyle='rounded-lg max-w-[36px]'
+                            onClick={openModalApiConnectionGetList}
+                        >
+                            <Wifi />
                         </Button>
                     )}
                 </div>

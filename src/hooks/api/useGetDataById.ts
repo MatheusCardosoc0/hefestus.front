@@ -4,12 +4,13 @@ import { api } from '../../libs/api';
 interface UseGetDataByIdProps {
     id: string
     urlApi: string
-    setData: (value: any) => void
+    setData?: (value: any) => void
 }
 
 const useGetDataById = ({ id, urlApi, setData }: UseGetDataByIdProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [promiseData, setPromiseData] = useState(null)
 
     useEffect(() => {
         if (id) {
@@ -18,7 +19,8 @@ const useGetDataById = ({ id, urlApi, setData }: UseGetDataByIdProps) => {
                 setError(null);
                 try {
                     const response = await api.get(`${urlApi}${id}`);
-                    setData(response.data);
+                    if (setData) setData(response.data);
+                    else { setPromiseData(response.data) }
                 } catch (error: any) {
                     setError(error);
                 } finally {
@@ -29,7 +31,7 @@ const useGetDataById = ({ id, urlApi, setData }: UseGetDataByIdProps) => {
             getData();
         }
     }, [id]);
-    return { loading, error };
+    return { loading, error, promiseData };
 };
 
 export default useGetDataById;

@@ -8,19 +8,13 @@ import { UFBRStates } from "@/constants/others/UFBRStates";
 import useGetDataById from "@/hooks/api/useGetDataById";
 import { useGetDataList } from "@/hooks/api/useGetDataList";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 import PersonGroupsModal, { personGroupSchema } from "./components/PersonGroupsModal";
 import { handleSetObjectForSelectValue } from "@/functions/handleSetObjectForSelectValue";
+import CityModal, { citySchema } from "./components/CityModal";
 
-
-
-const citySchema = z.object({
-    name: z.string().nonempty({ message: "O nome da cidade não pode estar vazio" }),
-    ibgeNumber: z.string().nonempty({ message: "O número do IBGE não pode estar vazio" }),
-    state: z.string().nonempty({ message: "O estado não pode estar vazio" }),
-});
 
 const personSchema = z.object({
     name: z.string().nonempty({ message: "O nome não pode estar vazio" }),
@@ -47,7 +41,7 @@ const personSchema = z.object({
 type FormPersonData = z.infer<typeof personSchema>
 type City = z.infer<typeof citySchema>
 
-const BreakLineInput = ({ children }: { children: ReactNode }) => (
+export const BreakLineInput = ({ children }: { children: ReactNode }) => (
     <div className="flex gap-2 max-w-[620px]" >
         {children}
     </div>
@@ -65,23 +59,37 @@ function NovaPessoa() {
         resolver: zodResolver(personSchema)
     })
 
-    const [state, setState] = useState('AC')
+    const [state, setState] = useState('GO')
     const [cities, setCities] = useState([])
     const [personGroupsList, setPersonGroupsList] = useState([])
     const [isOpenModalPersonGroups, setIsOpenModalPersonGroups] = useState(false)
+    const [isOpenModalCity, setIsOpenModalCity] = useState(false)
     const [currentId, setCurrentId] = useState(0)
-    const [kittenPostPersonGroups, setKittenPostPersonGroups] = useState(false)
+    const [kittenPostPersonGroups, setKittenPersonGroups] = useState(false)
+    const [kittenCity, setKittenCity] = useState(false)
+    const [triggerCity, setTriggerCity] = useState(false)
 
     const urlImage = watch('urlImage')
 
     const personGroup = watch('personGroup')
     const city = watch('city')
 
-    const { } = useGetDataById({
+    const { promiseData } = useGetDataById({
         id: state,
-        setData: setCities,
         urlApi: '/api/fetchCityDataIBGE/fetchData/'
     })
+
+    const { } = useGetDataList({
+        setData: setCities,
+        url: '/api/city',
+        kitten: kittenCity
+    })
+
+    useEffect(() => {
+        setState(city?.state)
+        console.log(city)
+    }, [city])
+
 
     const { } = useGetDataList({
         setData: setPersonGroupsList,
@@ -89,16 +97,25 @@ function NovaPessoa() {
         kitten: kittenPostPersonGroups
     })
 
-    // console.log(personGroup);
-
-    function HandleOpenModal(type: 'post' | 'put') {
+    function HandleOpenModalPersonGroups(type: 'post' | 'put') {
         if (type == 'post') {
             setCurrentId(0)
             setIsOpenModalPersonGroups(true)
         }
-        if (type == 'put') {
-            setCurrentId(personGroup.id)
+        if (type == 'put' && personGroup[0].id) {
+            setCurrentId(personGroup[0].id)
             setIsOpenModalPersonGroups(true)
+        }
+    }
+
+    function HandleOpenModalCity(type: 'post' | 'put') {
+        if (type == 'post') {
+            setCurrentId(0)
+            setIsOpenModalCity(true)
+        }
+        if (type == 'put' && city.id) {
+            setCurrentId(city.id)
+            setIsOpenModalCity(true)
         }
     }
 
@@ -161,7 +178,10 @@ function NovaPessoa() {
                     <BreakLineInput>
                         <Select
                             label="Cidade*"
-                            onChange={e => handleSetObjectForSelectValue(e, setValue, cities, 'city')}
+                            onChange={e => handleSetObjectForSelectValue(e, setValue, watch, cities, 'city')}
+                            openModalApiConnectionPost={() => HandleOpenModalCity('post')}
+                            openModalApiConnectionPut={() => HandleOpenModalCity('put')}
+                            openModalApiConnectionGetList={() => setCities(promiseData)}
                         >
                             <option
                                 value={''}
@@ -179,9 +199,9 @@ function NovaPessoa() {
                         </Select>
                         <Select
                             label="Grupo*"
-                            onChange={e => handleSetObjectForSelectValue(e, setValue, personGroupsList, 'personGroup')}
-                            openModalApiConnectionPost={() => HandleOpenModal('post')}
-                            openModalApiConnectionPut={() => HandleOpenModal('put')}
+                            onChange={e => handleSetObjectForSelectValue(e, setValue, watch, personGroupsList, 'personGroup', true)}
+                            openModalApiConnectionPost={() => HandleOpenModalPersonGroups('post')}
+                            openModalApiConnectionPut={() => HandleOpenModalPersonGroups('put')}
                         >
                             <option
                                 value={''}
@@ -202,6 +222,7 @@ function NovaPessoa() {
                         label="Estado*"
                         customStyle="max-w-[200px]"
                         onChange={e => setState(e.target.value)}
+                        value={state}
                     >
                         {UFBRStates.map((name, id) => (
                             <option
@@ -282,8 +303,15 @@ function NovaPessoa() {
             {isOpenModalPersonGroups && (
                 <PersonGroupsModal
                     setOpenModal={setIsOpenModalPersonGroups}
-                    dispatchKitten={setKittenPostPersonGroups}
+                    dispatchKitten={setKittenPersonGroups}
                     personGroupId={currentId}
+                />
+            )}
+            {isOpenModalCity && (
+                <CityModal
+                    setOpenModal={setIsOpenModalCity}
+                    dispatchKitten={setKittenCity}
+                    cityId={currentId}
                 />
             )}
         </>
