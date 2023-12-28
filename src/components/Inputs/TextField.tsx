@@ -1,8 +1,8 @@
-import { HTMLInputTypeAttribute, useState } from 'react';
+import { HTMLInputTypeAttribute, InputHTMLAttributes, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { UseFormRegister } from 'react-hook-form';
 
-interface TextFieldProps {
+interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     error?: string;
     register: UseFormRegister<any>;

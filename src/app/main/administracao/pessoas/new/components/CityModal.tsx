@@ -13,7 +13,7 @@ import { UFBRStates } from "@/constants/others/UFBRStates";
 export const citySchema = z.object({
     id: z.number().optional(),
     name: z.string().nonempty({ message: "O nome da cidade não pode estar vazio" }),
-    ibgeNumber: z.string().nonempty({ message: "O número do IBGE não pode estar vazio" }),
+    ibgeNumber: z.number().min(0, { message: "O número do IBGE não pode estar vazio" }),
     state: z.string().nonempty({ message: "O estado não pode estar vazio" }),
 });
 

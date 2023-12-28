@@ -5,15 +5,16 @@ interface UseGetDataByIdProps {
     id: string
     urlApi: string
     setData?: (value: any) => void
+    activate: boolean
 }
 
-const useGetDataById = ({ id, urlApi, setData }: UseGetDataByIdProps) => {
+const useGetDataById = ({ id, urlApi, setData, activate }: UseGetDataByIdProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [promiseData, setPromiseData] = useState(null)
 
     useEffect(() => {
-        if (id) {
+        if (id && activate) {
             const getData = async () => {
                 setLoading(true);
                 setError(null);
@@ -30,7 +31,7 @@ const useGetDataById = ({ id, urlApi, setData }: UseGetDataByIdProps) => {
 
             getData();
         }
-    }, [id]);
+    }, [id, activate]);
     return { loading, error, promiseData };
 };
 

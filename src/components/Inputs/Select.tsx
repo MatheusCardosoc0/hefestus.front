@@ -1,4 +1,4 @@
-import { PenLine, RefreshCcw, UserPlus, Wifi } from 'lucide-react';
+import { Eraser, PenLine, RefreshCcw, UserPlus, Wifi } from 'lucide-react';
 import { MouseEventHandler, ReactNode, SelectHTMLAttributes, useState } from 'react';
 import { Button } from '../Buttons';
 
@@ -12,6 +12,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
     openModalApiConnectionPost?: () => void
     openModalApiConnectionPut?: () => void
     openModalApiConnectionGetList?: () => void
+    openModalApiConnectionGetDeleteStackArray?: () => void
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -24,6 +25,7 @@ const Select: React.FC<SelectProps> = ({
     openModalApiConnectionPost,
     openModalApiConnectionPut,
     openModalApiConnectionGetList,
+    openModalApiConnectionGetDeleteStackArray,
     ...props
 }) => {
     const [isFocused, setIsFocused] = useState(false);
@@ -83,6 +85,16 @@ const Select: React.FC<SelectProps> = ({
                             onClick={openModalApiConnectionGetList}
                         >
                             <Wifi />
+                        </Button>
+                    )}
+                    {openModalApiConnectionGetDeleteStackArray && (
+                        <Button
+                            type='button'
+                            variantColor='red'
+                            customStyle='rounded-lg max-w-[36px]'
+                            onClick={openModalApiConnectionGetDeleteStackArray}
+                        >
+                            <Eraser />
                         </Button>
                     )}
                 </div>

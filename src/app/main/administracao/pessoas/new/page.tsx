@@ -11,30 +11,39 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
-import PersonGroupsModal, { personGroupSchema } from "./components/PersonGroupsModal";
+import PersonGroupsModal, { PersonGroupForm, personGroupSchema } from "./components/PersonGroupsModal";
 import { handleSetObjectForSelectValue } from "@/functions/handleSetObjectForSelectValue";
 import CityModal, { citySchema } from "./components/CityModal";
+import useSubmitDataPostOrPut from "@/hooks/api/useSubmitDataPostOrPut";
 
 
 const personSchema = z.object({
     name: z.string().nonempty({ message: "O nome não pode estar vazio" }),
     email: z.string().email({ message: "Formato de e-mail inválido" }),
     phone: z.string().nonempty({ message: "O telefone não pode estar vazio" }),
-    age: z.number().min(0, { message: "A idade não pode ser negativa" }),
+    age: z.string().optional().refine((val) => {
+        // Se o valor for undefined, a validação é considerada bem-sucedida, pois o campo é opcional
+        if (val === undefined) return true;
+
+        // Caso contrário, verifique se o valor é um número
+        return !Number.isNaN(parseInt(val, 10));
+    }, {
+        message: "Expected number, received a string"
+    }),
     cpf: z.string().nonempty({ message: "O CPF não pode estar vazio" }),
     address: z.string().nonempty({ message: "O endereço não pode estar vazio" }),
-    birthDate: z.string().nonempty({ message: "A data de nascimento não pode estar vazia" }), // ou z.date() se estiver usando objetos Date
-    ibge: z.string().nonempty({ message: "O IBGE não pode estar vazio" }),
-    razao: z.string().nonempty({ message: "A razão não pode estar vazia" }),
-    inscricaoEstadual: z.string().nonempty({ message: "A inscrição estadual não pode estar vazia" }),
+    birthDate: z.string().optional(),
+    ibge: z.string().optional(),
+    razao: z.string().optional(),
+    inscricaoEstadual: z.string(),
     cep: z.string().nonempty({ message: "O CEP não pode estar vazio" }),
-    urlImage: z.string().url({ message: "Formato de URL inválido para a imagem" }),
-    isBlocked: z.boolean(),
-    maritalStatus: z.string().nonempty({ message: "O estado civil não pode estar vazio" }),
-    habilities: z.string().nonempty({ message: "As habilidades não podem estar vazias" }),
-    description: z.string().nonempty({ message: "A descrição não pode estar vazia" }),
-    personGroup: z.array(personGroupSchema),
-    cityId: z.number().min(0, { message: "O ID da cidade não pode ser negativo" }),
+    urlImage: z.string().optional(),
+    isBlocked: z.boolean().optional(),
+    maritalStatus: z.string().optional(),
+    habilities: z.string().optional(),
+    description: z.string().optional(),
+    personGroup: z.array(personGroupSchema).nonempty("Deve ser informado ao menos um grupo"),
+    cityId: z.number().min(0, { message: "O ID da cidade não pode ser negativo" }).optional(),
     city: citySchema,
 });
 
@@ -56,8 +65,15 @@ function NovaPessoa() {
         watch,
         setValue
     } = useForm<FormPersonData>({
+        defaultValues: {
+            isBlocked: false,
+            age: '0',
+            personGroup: []
+        },
         resolver: zodResolver(personSchema)
     })
+
+
 
     const [state, setState] = useState('GO')
     const [cities, setCities] = useState([])
@@ -67,6 +83,7 @@ function NovaPessoa() {
     const [currentId, setCurrentId] = useState(0)
     const [kittenPostPersonGroups, setKittenPersonGroups] = useState(false)
     const [kittenCity, setKittenCity] = useState(false)
+    const [citiesIBGEList, setCitiesIBGEList] = useState([])
     const [triggerCity, setTriggerCity] = useState(false)
 
     const urlImage = watch('urlImage')
@@ -74,9 +91,11 @@ function NovaPessoa() {
     const personGroup = watch('personGroup')
     const city = watch('city')
 
-    const { promiseData } = useGetDataById({
-        id: state,
-        urlApi: '/api/fetchCityDataIBGE/fetchData/'
+    const { } = useGetDataById({
+        id: state || 'GO',
+        urlApi: '/api/fetchCityDataIBGE/fetchData/',
+        setData: setCitiesIBGEList,
+        activate: triggerCity
     })
 
     const { } = useGetDataList({
@@ -84,6 +103,8 @@ function NovaPessoa() {
         url: '/api/city',
         kitten: kittenCity
     })
+
+    console.log(citiesIBGEList)
 
     useEffect(() => {
         setState(city?.state)
@@ -119,9 +140,27 @@ function NovaPessoa() {
         }
     }
 
+    const { submitData } = useSubmitDataPostOrPut({
+        urlApi: '/api/person',
+        urlReturn: '/main/administracao/pessoas'
+    })
+
+    function onSubmit(data: FormPersonData) {
+        console.log(data)
+        submitData({
+            data
+        })
+    }
+
+    const removeLastPersonGroup = () => {
+        const newPersonGroup = personGroup.slice(0, -1);
+        setValue("personGroup", newPersonGroup as unknown as [{ name: string, id?: number }, ...{ name: string, id?: number }[]]);
+    };
+
     return (
         <>
             <form
+                onSubmit={handleSubmit(onSubmit)}
                 className="flex justify-between"
             >
                 <div className="flex flex-col gap-2" >
@@ -178,30 +217,42 @@ function NovaPessoa() {
                     <BreakLineInput>
                         <Select
                             label="Cidade*"
-                            onChange={e => handleSetObjectForSelectValue(e, setValue, watch, cities, 'city')}
+                            onChange={e => handleSetObjectForSelectValue(e, setValue, watch, triggerCity ? citiesIBGEList : cities, 'city')}
                             openModalApiConnectionPost={() => HandleOpenModalCity('post')}
                             openModalApiConnectionPut={() => HandleOpenModalCity('put')}
-                            openModalApiConnectionGetList={() => setCities(promiseData)}
+                            openModalApiConnectionGetList={() => setTriggerCity(prev => !prev)}
                         >
                             <option
                                 value={''}
                             >
                                 Nenhum
                             </option>
-                            {cities.map((item: any) => (
-                                <option
-                                    key={item.id}
-                                    value={item.id}
-                                >
-                                    {item.name}
-                                </option>
-                            ))}
+                            {triggerCity ? (
+                                citiesIBGEList.map((item: any) => (
+                                    <option
+                                        key={item.ibgeNumber}
+                                        value={item.ibgeNumber}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))
+                            ) : (
+                                cities.map((item: any) => (
+                                    <option
+                                        key={item.id}
+                                        value={item.id}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))
+                            )}
                         </Select>
                         <Select
                             label="Grupo*"
                             onChange={e => handleSetObjectForSelectValue(e, setValue, watch, personGroupsList, 'personGroup', true)}
                             openModalApiConnectionPost={() => HandleOpenModalPersonGroups('post')}
                             openModalApiConnectionPut={() => HandleOpenModalPersonGroups('put')}
+                            openModalApiConnectionGetDeleteStackArray={() => removeLastPersonGroup()}
                         >
                             <option
                                 value={''}
@@ -241,6 +292,31 @@ function NovaPessoa() {
                     >
                         Cadastrar
                     </Button>
+                </div>
+                <div
+                    className="w-full max-w-[120px] drop-shadow-[0px_0px_2px_#000000ae]"
+                >
+                    <h4 className="bg-black text-center text-white font-bold p-1" >
+                        Grupos
+                    </h4>
+                    <ul
+                        className="flex flex-col"
+                    >
+                        {personGroup.length > 0 && personGroup.map(item => (
+                            <ul key={item.id}
+                                className="bg-neutral-600 even:bg-neutral-800 text-white flex gap-2 border-b border-[#0000007e]"
+                            >
+                                <span
+                                    className="bg-neutral-100 p-1 w-[20%] text-black"
+                                >
+                                    {item.id}
+                                </span>
+                                <span>
+                                    {item.name}
+                                </span>
+                            </ul>
+                        ))}
+                    </ul>
                 </div>
                 <div className="flex flex-col gap-2" >
                     <BreakLineInput>
@@ -295,7 +371,7 @@ function NovaPessoa() {
                         />
                         <ImageUpload
                             onChange={value => setValue("urlImage", value)}
-                            value={urlImage}
+                            value={urlImage ? urlImage : ''}
                         />
                     </BreakLineInput>
                 </div>
