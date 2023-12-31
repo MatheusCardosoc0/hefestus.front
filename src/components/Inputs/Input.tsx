@@ -1,18 +1,17 @@
 import { HTMLInputTypeAttribute, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { UseFormRegister } from 'react-hook-form';
 
-interface InputProps {
+interface BasicInputProps {
     label: string;
     onChange: (value: any) => void
     type?: HTMLInputTypeAttribute;
     value?: string | number
     disabled?: boolean;
-    id: string
-    customStyle: string
+    id: any
+    customStyle?: string
 }
 
-const Input: React.FC<InputProps> = ({
+const BasicInput: React.FC<BasicInputProps> = ({
     label,
     type = 'text',
     disabled,
@@ -60,4 +59,4 @@ const Input: React.FC<InputProps> = ({
     );
 };
 
-export default Input;
+export default BasicInput;

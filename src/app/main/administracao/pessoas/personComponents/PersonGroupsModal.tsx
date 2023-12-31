@@ -11,6 +11,7 @@ import { Modal } from "@/components/Modal";
 import { Form } from "@/components/Form";
 import { Loader2 } from "lucide-react";
 import useGetDataById from "@/hooks/api/useGetDataById";
+import { Button } from "@/components/Buttons";
 
 export type PersonGroupForm = z.infer<typeof personGroupSchema>
 
@@ -81,12 +82,12 @@ const PersonGroupsModal: React.FC<PersonGroupsModalProps> = ({
                         disabled={isLoading}
                     />
 
-                    <Form.Action ButtonColor="success" className="mt-4" >
+                    <Button variantColor="green" customStyle="mt-4" type="submit" >
                         {loading && (
                             <Loader2 className="animate-spin" />
                         )}
                         {personGroupId ? "Alterar" : "Cadastrar"}
-                    </Form.Action>
+                    </Button>
                 </Form.Root>
             </Modal.Root>
         </>

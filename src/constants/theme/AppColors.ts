@@ -11,7 +11,7 @@ type AppColorsProps = {
 export const AppColors: AppColorsProps = {
     error: 'bg-red-500',
     info: 'bg-sky-500',
-    success: 'bg-green-500',
+    success: 'bg-gradient-to-t from-green-400 to-green-700',
     violet: 'bg-violet-500',
     warn: 'bg-yellow-500'
 }

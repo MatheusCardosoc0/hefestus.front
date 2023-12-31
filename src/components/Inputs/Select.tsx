@@ -1,103 +1,80 @@
-import { Eraser, PenLine, RefreshCcw, UserPlus, Wifi } from 'lucide-react';
-import { MouseEventHandler, ReactNode, SelectHTMLAttributes, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../Buttons';
+import { BasicInput } from '.';
 
-interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectProps {
+    options: any[];
     label: string;
-    onChange: (value: any) => void
-    disabled?: boolean;
-    id?: string
-    children: ReactNode
-    customStyle?: string
-    openModalApiConnectionPost?: () => void
-    openModalApiConnectionPut?: () => void
-    openModalApiConnectionGetList?: () => void
-    openModalApiConnectionGetDeleteStackArray?: () => void
+    setValue: Function;
+    id?: string;
+    customStyle?: string;
+    openModalApiConnectionPost?: () => void;
+    openModalApiConnectionPut?: () => void;
+    openModalApiConnectionGetList?: () => void;
 }
 
 const Select: React.FC<SelectProps> = ({
     label,
-    disabled,
-    onChange,
+    options,
+    setValue,
     id,
-    children,
     customStyle,
     openModalApiConnectionPost,
     openModalApiConnectionPut,
-    openModalApiConnectionGetList,
-    openModalApiConnectionGetDeleteStackArray,
-    ...props
+    openModalApiConnectionGetList
 }) => {
-    const [isFocused, setIsFocused] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [filteredOptions, setFilteredOptions] = useState<Array<string>>([]);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+    useEffect(() => {
+        if (inputValue !== '') {
+            const lowerCaseInputValue = inputValue.toLowerCase();
+            const filtered = options
+                .filter(option => option.name.toLowerCase().includes(lowerCaseInputValue))
+                .slice(0, 5);
+            setFilteredOptions(filtered);
+        } else {
+            setFilteredOptions(options.slice(0, 5));
+        }
+    }, [inputValue, options]);
+
+    const handleOptionClick = (option: any) => {
+        setInputValue(option.name);
+        setValue(option);
+        setIsDropdownVisible(false); // Esconde a lista suspensa após a seleção
+    };
 
     return (
-        <div className="flex flex-col w-full h-[60px]">
-            <label htmlFor={id} className={`text-sm font-bold
-            ${isFocused && 'text-blue-500'}
-            `}>
-                {label}
-            </label>
-            <div className="relative flex gap-1">
-                <select
-                    id={id}
-                    onChange={onChange}
-                    disabled={disabled}
-                    {...props}
-                    autoComplete="true"
-                    className={`w-full p-2 border-2 border-neutral-400 
-                    rounded-md focus:outline-none focus:border-blue-500 ${customStyle}`}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
+        <div className="flex flex-col w-full">
+            <div className="flex gap-1">
+                <div className='relative'
+                    onFocus={() => setIsDropdownVisible(true)}
+                    onBlur={() => setIsDropdownVisible(false)}
                 >
-                    {children}
-                </select>
-                <div
-                    className='
-                        flex
-                        gap-1
-                      '
-                >
-                    {openModalApiConnectionPut && (
-                        <Button
-                            type='button'
-                            variantColor='orange'
-                            customStyle='rounded-lg max-w-[36px]'
-                            onClick={openModalApiConnectionPut}
-                        >
-                            <PenLine />
-                        </Button>
-                    )}
-                    {openModalApiConnectionPost && (
-                        <Button
-                            type='button'
-                            variantColor='green'
-                            customStyle='rounded-lg max-w-[36px]'
-                            onClick={openModalApiConnectionPost}
-                        >
-                            <UserPlus />
-                        </Button>
-                    )}
-                    {openModalApiConnectionGetList && (
-                        <Button
-                            type='button'
-                            variantColor='blue'
-                            customStyle='rounded-lg max-w-[36px]'
-                            onClick={openModalApiConnectionGetList}
-                        >
-                            <Wifi />
-                        </Button>
-                    )}
-                    {openModalApiConnectionGetDeleteStackArray && (
-                        <Button
-                            type='button'
-                            variantColor='red'
-                            customStyle='rounded-lg max-w-[36px]'
-                            onClick={openModalApiConnectionGetDeleteStackArray}
-                        >
-                            <Eraser />
-                        </Button>
+                    <BasicInput
+                        label={label}
+                        type='text'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        id={id}
+                        customStyle={customStyle}
+                    />
+                    {isDropdownVisible && (
+                        <ul className="absolute top-[120%] rounded-lg Fade drop-shadow-[0px_0px_1px_black] w-full font-medium">
+                            {filteredOptions.map((option: any) => (
+                                <li
+                                    key={option.id}
+                                    onClick={() => handleOptionClick(option)}
+                                    className='bg-neutral-100 p-2 even:bg-neutral-300 hover:bg-neutral-500 cursor-pointer'
+                                >
+                                    {option.name}
+                                </li>
+                            ))}
+                        </ul>
                     )}
                 </div>
+                {/* Botões e outras partes do componente... */}
             </div>
         </div>
     );

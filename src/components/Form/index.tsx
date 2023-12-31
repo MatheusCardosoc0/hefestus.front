@@ -1,17 +1,19 @@
-import FormAction from "./FormAction";
 import FormBreakLine from "./FormBreakLine";
 import FormContentContainer from "./FormContentContainer";
 import FormContentField from "./FormContentField";
 import FormFooter from "./FormFooter";
+import FormGroupContainer from "./FormGroupContainer";
+import FormNavbarSections from "./FormNavbarSections";
 import FormRoot from "./FormRoot";
 import FormTitle from "./FormTitle";
 
 export const Form = {
     Root: FormRoot,
     Title: FormTitle,
-    Action: FormAction,
     ContentField: FormContentField,
     Footer: FormFooter,
     ContentContainer: FormContentContainer,
-    BreakLine: FormBreakLine
+    BreakLine: FormBreakLine,
+    NavbarSections: FormNavbarSections,
+    GroupContainer: FormGroupContainer
 }

@@ -1,28 +1,32 @@
 import { ButtonHTMLAttributes, ReactNode } from "react"
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
     children: ReactNode
     customStyle?: string,
-    variantColor?: 'blue' | 'yellow' | 'red' | 'green' | 'white' | 'orange'
+    variantColor?: 'blue' | 'yellow' | 'red' | 'green' | 'white' | 'orange' | 'black'
+    type?: "submit" | "reset" | "button"
+    onClick?: () => void
 }
 
 const Button: React.FC<ButtonProps> = ({
     children,
     customStyle,
     variantColor = 'blue',
-    ...props
+    type = 'button',
+    onClick
 }) => {
     return (
         <button
-            {...props}
+            type={type}
+            onClick={onClick}
             className={`
                 p-2     
                 font-bold
-                w-full
                 flex
                 items-center
                 justify-center
                 gap-2
+                max-w-[200px]
                 ${customStyle}
                 ${variantColor === 'blue' && 'bg-blue-500 text-white hover:bg-blue-700'}
                 ${variantColor === 'orange' && 'bg-orange-500 text-white hover:bg-orange-700'}
@@ -30,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({
                 ${variantColor === 'yellow' && 'bg-yellow-400 text-white hover:bg-yellow-500'}
                 ${variantColor === 'red' && 'bg-red-400 text-white hover:bg-red-500'}
                 ${variantColor === 'green' && 'bg-green-500 text-white hover:bg-green-600'}
+                ${variantColor === 'black' && 'bg-black text-white hover:bg-neutral-700'}
           `}
         >
             {children}

@@ -1,13 +1,15 @@
 interface FormFooterProps {
     children: React.ReactNode
+    className?: string
 }
 
 const FormFooter: React.FC<FormFooterProps> = ({
-    children
+    children,
+    className
 }) => {
     return (
         <footer
-            className="w-full flex-gap-2 items-start"
+            className={`w-full flex gap-2 items-center ${className}`}
         >
             {children}
         </footer>

@@ -37,10 +37,7 @@ export default function usePersonFunctions({
     const [currentIdCityOrPersonGroup, setCurrentIdCityOrPersonGroup] = useState(0)
 
 
-    const removeLastPersonGroup = () => {
-        const newPersonGroup = personGroup.slice(0, -1);
-        setValue("personGroup", newPersonGroup as unknown as [{ name: string, id?: number }, ...{ name: string, id?: number }[]]);
-    };
+
 
     function HandleOpenModalPersonGroups(type: 'post' | 'put') {
         if (type == 'post') {
@@ -68,7 +65,7 @@ export default function usePersonFunctions({
     const { } = useGetDataById({
         id: cityState.brStates || 'GO',
         urlApi: '/api/fetchCityDataIBGE/fetchData/',
-        setData: (newData) => setCityState((prevState: any) => ({ ...prevState, citiesIBGEList: newData })),
+        setData: setCityState,
         activate: cityState.triggerCity,
         stateKey: 'citiesIBGEList'
     })
@@ -112,7 +109,6 @@ export default function usePersonFunctions({
         onSubmit,
         HandleOpenModalCity,
         HandleOpenModalPersonGroups,
-        removeLastPersonGroup,
         cityState,
         personGroupState,
         setCityState,

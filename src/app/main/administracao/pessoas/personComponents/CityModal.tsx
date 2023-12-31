@@ -11,6 +11,7 @@ import { Form } from "@/components/Form";
 import { citySchema } from "../PersonSchemas";
 import { Modal } from "@/components/Modal";
 import useGetDataById from "@/hooks/api/useGetDataById";
+import { Button } from "@/components/Buttons";
 
 export type CityForm = z.infer<typeof citySchema>
 
@@ -114,9 +115,9 @@ const CityModal: React.FC<CityModalProps> = ({
                         </Form.BreakLine>
                     </Form.ContentField>
 
-                    <Form.Action ButtonColor="success" className="mt-4" >
+                    <Button variantColor="green" customStyle="mt-4" >
                         {cityId ? "Alterar" : "Cadastrar"}
-                    </Form.Action>
+                    </Button>
                 </Form.Root>
             </Modal.Root>
         </>

@@ -26,9 +26,10 @@ const useGetDataById = ({
                 setError(null);
                 try {
                     const response = await api.get(`${urlApi}${id}`);
+                    let data = response.data
 
                     if (stateKey) {
-                        setData((prevState: any) => ({ ...prevState, [stateKey]: response.data }));
+                        setData((prevState: any) => ({ ...prevState, [stateKey]: data }));
                     }
 
                     if (!stateKey) {

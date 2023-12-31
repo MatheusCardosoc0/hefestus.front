@@ -7,7 +7,7 @@ const FormContentField: React.FC<FormContentFieldProps> = ({
 }) => {
     return (
         <div
-            className="flex flex-1 flex-col gap-4"
+            className="flex flex-col gap-4"
         >
             {children}
         </div>
