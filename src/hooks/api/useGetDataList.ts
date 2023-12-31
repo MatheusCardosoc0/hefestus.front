@@ -7,14 +7,16 @@ interface UseGetDataListProps {
     setData: (data: any) => void,
     url: string,
     kitten?: any
+    stateKey?: string
 }
 
 export const useGetDataList = ({
     setDataFilter,
     setData,
     kitten,
-    url }: UseGetDataListProps
-) => {
+    url,
+    stateKey,
+}: UseGetDataListProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -25,10 +27,18 @@ export const useGetDataList = ({
 
             try {
                 const response = await api.get(url);
-                setData(response.data);
-                if (setDataFilter) {
-                    setDataFilter(response.data);
+                let data = response.data;
+
+                if (stateKey) {
+                    setData((prevState: any) => ({ ...prevState, [stateKey]: data }));
+                    if (setDataFilter) setDataFilter((prevState: any) => ({ ...prevState, [stateKey]: response.data }));
                 }
+
+                if (!stateKey) {
+                    setData(response.data);
+                    if (setDataFilter) setDataFilter(response.data);
+                }
+
             } catch (error: any) {
                 toast.error("Não foi possível pegar os dados da API");
                 console.error('Error:', error);

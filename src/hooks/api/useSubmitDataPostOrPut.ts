@@ -3,15 +3,13 @@
 import { ApiError } from '@/@types/ApiError';
 import { api } from '@/libs/api';
 import { useRouter } from 'next/navigation';
-import { Dispatch, FormEvent, MouseEventHandler, SetStateAction } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface UseSubmitDataPostOrPutProps {
     urlApi: string
     urlReturn?: string
     id?: number
-    setOpenModal?: Dispatch<SetStateAction<boolean>>
-    dispatchKitten?: Dispatch<SetStateAction<boolean>>
 }
 
 interface SubmitDataProps {
@@ -22,7 +20,8 @@ interface SubmitDataProps {
     messageSuccessChange?: string
 }
 
-const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal, dispatchKitten }: UseSubmitDataPostOrPutProps) => {
+const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPutProps) => {
+    const [loading, setLoading] = useState(false)
 
     const router = useRouter();
 
@@ -36,6 +35,7 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal, dispatchK
         if (event) {
             event.preventDefault()
         }
+        setLoading(true)
         try {
             let response
             if (id) {
@@ -50,11 +50,7 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal, dispatchK
                 toast.success(messageSuccess)
                 console.log(response.data.token)
             }
-
             if (urlReturn) { router.push(urlReturn); }
-            if (setOpenModal) { setOpenModal(false) }
-            if (dispatchKitten) { dispatchKitten(prev => !prev) }
-
         } catch (error: any) {
             const apiError = error as ApiError
             if (apiError.response) {
@@ -65,9 +61,10 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id, setOpenModal, dispatchK
             }
             console.log(error);
         }
+        setLoading(false)
     }
 
-    return { submitData };
+    return { submitData, loading };
 };
 
 export default useSubmitDataPostOrPut;

@@ -2,16 +2,22 @@ import { useState, useEffect } from 'react';
 import { api } from '../../libs/api';
 
 interface UseGetDataByIdProps {
-    id: string
-    urlApi: string
-    setData?: (value: any) => void
-    activate: boolean
+    id: string | number;
+    urlApi: string;
+    setData: (value: any) => void;
+    activate: boolean;
+    stateKey?: string;
 }
 
-const useGetDataById = ({ id, urlApi, setData, activate }: UseGetDataByIdProps) => {
+const useGetDataById = ({
+    id,
+    urlApi,
+    setData,
+    activate,
+    stateKey
+}: UseGetDataByIdProps) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [promiseData, setPromiseData] = useState(null)
 
     useEffect(() => {
         if (id && activate) {
@@ -20,8 +26,14 @@ const useGetDataById = ({ id, urlApi, setData, activate }: UseGetDataByIdProps) 
                 setError(null);
                 try {
                     const response = await api.get(`${urlApi}${id}`);
-                    if (setData) setData(response.data);
-                    else { setPromiseData(response.data) }
+
+                    if (stateKey) {
+                        setData((prevState: any) => ({ ...prevState, [stateKey]: response.data }));
+                    }
+
+                    if (!stateKey) {
+                        setData(response.data);
+                    }
                 } catch (error: any) {
                     setError(error);
                 } finally {
@@ -32,7 +44,7 @@ const useGetDataById = ({ id, urlApi, setData, activate }: UseGetDataByIdProps) 
             getData();
         }
     }, [id, activate]);
-    return { loading, error, promiseData };
+    return { loading, error };
 };
 
 export default useGetDataById;

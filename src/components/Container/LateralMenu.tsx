@@ -7,10 +7,10 @@ import { Button } from "../Buttons"
 import { useCallback, useEffect, useState } from "react"
 import MenuOptions from "./MenuOptions"
 import { MenuOptionsProps, Option } from "@/@types/MenuOptions"
-import { usuarioOptions } from "@/constants/usuarioOptions"
-import { administracaoOptions } from "@/constants/administracaoOptions"
+import { usuarioOptions } from "@/constants/appSections/usuarioOptions"
+import { administracaoOptions } from "@/constants/appSections/administracaoOptions"
 import { useIsOpenSectionOptionsMenu } from "@/hooks/context/useIsOpenSectionOptionsMenu"
-import { SectionsOptions } from "@/constants/SectionsOptions"
+import { SectionsOptions } from "@/constants/appSections/SectionsOptions"
 import { StarIcon, BarChart3 } from 'lucide-react'
 import Link from "next/link"
 

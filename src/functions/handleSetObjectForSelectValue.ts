@@ -1,8 +1,15 @@
+import toast from "react-hot-toast";
+
+type SimpleItemProps = {
+    id: number
+    name: string
+}
+
 export function handleSetObjectForSelectValue<T>(
     e: React.ChangeEvent<HTMLSelectElement>,
     setValue: Function,
-    watch: Function, // Adicionando watch como um parâmetro
-    array: T[],
+    watch: Function,
+    array: SimpleItemProps[],
     valueKey: string,
     isArray: boolean = false
 ) {
@@ -12,18 +19,22 @@ export function handleSetObjectForSelectValue<T>(
     }
 
     const selectedId = e.target.value;
-    const selectedItem = array.find((item: any) => item.id.toString() === selectedId);
+    const selectedItem = array.find((item) => item.id.toString() === selectedId);
 
     if (!selectedItem) return;
 
     if (isArray) {
-        // Obter o valor atual do campo
         const currentValue = watch(valueKey);
 
-        // Calcular o novo valor do campo
+        const checkItemNotRepeat = currentValue.some((item: SimpleItemProps) => item.id === selectedItem.id)
+
+        if (checkItemNotRepeat) {
+            toast("Item já adicionado ao grupo")
+            return
+        }
+
         const newValue = Array.isArray(currentValue) ? [...currentValue, selectedItem] : [selectedItem];
 
-        // Atualizar o valor do campo
         setValue(valueKey, newValue);
     } else {
         setValue(valueKey, selectedItem);
