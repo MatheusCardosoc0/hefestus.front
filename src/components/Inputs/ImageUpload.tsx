@@ -40,6 +40,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
                            p-1
                            rounded-md
                            hover:bg-blue-900
+                           w-[120px]
                         "
                     >
                         <img

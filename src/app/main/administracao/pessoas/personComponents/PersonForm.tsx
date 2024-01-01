@@ -1,12 +1,10 @@
 "use client"
 
-import { ImageUpload, Select } from "@/components/Inputs";
-import TextField from "@/components/Inputs/TextField";
+import { AdvancedSelect, ImageUpload, Select } from "@/components/Inputs";
 import { UFBRStates } from "@/constants/others/UFBRStates";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import PersonGroupsModal from "./PersonGroupsModal";
-import { handleSetObjectForSelectValue } from "@/functions/handleSetObjectForSelectValue";
 import CityModal from "./CityModal";
 
 import { Form } from "@/components/Form";
@@ -14,6 +12,9 @@ import { FormPersonData, personSchema } from "../PersonSchemas";
 import usePersonFunctions from "./usePersonFunctions";
 import { useState } from "react";
 import { Button } from "@/components/Buttons";
+import SecondaryInputFields from "./SecondaryInputFields";
+import PrimaryInputFields from "./PrimaryInputFields";
+import useSubmitDataPostOrPut from "@/hooks/api/useSubmitDataPostOrPut";
 
 interface PersonFormProps {
     id?: number | string
@@ -50,7 +51,6 @@ const PersonForm: React.FC<PersonFormProps> = ({
         HandleOpenModalCity,
         HandleOpenModalPersonGroups,
         cityState,
-        onSubmit,
         personGroupState,
         setCityState,
         setPersonGroupState,
@@ -60,6 +60,20 @@ const PersonForm: React.FC<PersonFormProps> = ({
         personGroup,
         setValue
     })
+
+    const { submitData } = useSubmitDataPostOrPut({
+        urlApi: '/api/person',
+        urlReturn: '/main/administracao/pessoas'
+    })
+
+    function onSubmit(data: FormPersonData) {
+        console.log(data)
+        submitData({
+            data
+        })
+    }
+
+    console.log(errors)
 
     return (
         <>
@@ -78,104 +92,34 @@ const PersonForm: React.FC<PersonFormProps> = ({
                     {currentPersonSection == 'principais' && (
                         <>
                             <Form.ContentField>
-                                <Form.BreakLine>
-                                    <TextField
-                                        id="name"
-                                        label="Nome*"
-                                        register={register}
-                                        error={errors.name?.message} />
-                                    <TextField
-                                        id="email"
-                                        label="E-mail*"
-                                        register={register}
-                                        error={errors.email?.message} />
-                                </Form.BreakLine>
-                                <Form.BreakLine>
-                                    <TextField
-                                        id="cep"
-                                        label="CEP*"
-                                        register={register}
-                                        error={errors.cep?.message} />
-                                    <TextField
-                                        id="phone"
-                                        label="Telefone*"
-                                        register={register}
-                                        error={errors.phone?.message} />
-                                </Form.BreakLine>
+                                <PrimaryInputFields
+                                    errors={errors}
+                                    register={register}
+                                />
 
                                 <Form.BreakLine>
-                                    <TextField
-                                        id="habilities"
-                                        label="Habilidades"
-                                        register={register}
-                                        error={errors.habilities?.message} />
-                                    <TextField
-                                        id="cpf"
-                                        label="CPF\CNPJ*"
-                                        register={register}
-                                        error={errors.cpf?.message} />
-                                    <TextField
-                                        id="address"
-                                        label="Endereço*"
-                                        register={register}
-                                        error={errors.address?.message} />
-                                </Form.BreakLine>
-
-                                <Form.BreakLine>
-                                    {/* <Select
+                                    <AdvancedSelect
                                         label="Cidade*"
-                                        onChange={e => handleSetObjectForSelectValue(e, setValue, watch, cityState.triggerCity ? cityState.citiesIBGEList : cityState.cities, 'city')}
+                                        options={cityState.cities}
+                                        setValue={setValue}
+                                        keyState="city"
                                         openModalApiConnectionPost={() => HandleOpenModalCity('post')}
                                         openModalApiConnectionPut={() => HandleOpenModalCity('put')}
                                         openModalApiConnectionGetList={() => setCityState(prevState => ({ ...prevState, triggerCity: !prevState.triggerCity }))}
-                                    >
-                                        <option
-                                            value={''}
-                                        >
-                                            Nenhum
-                                        </option>
-                                        {cityState.triggerCity ? (
-                                            cityState.citiesIBGEList.map((item: any) => (
-                                                <option
-                                                    key={item.ibgeNumber}
-                                                    value={item.ibgeNumber}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            ))
-                                        ) : (
-                                            cityState.cities.map((item: any) => (
-                                                <option
-                                                    key={item.id}
-                                                    value={item.id}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            ))
-                                        )}
-                                    </Select>
-                                    <Select
+                                        trigger={cityState.triggerCity}
+                                        secondaryOptions={cityState.citiesIBGEList}
+                                    />
+                                    <AdvancedSelect
                                         label="Grupo*"
-                                        onChange={e => handleSetObjectForSelectValue(e, setValue, watch, personGroupState.personGroupsList, 'personGroup', true)}
+                                        options={personGroupState.personGroupsList}
+                                        setValue={setValue}
+                                        keyState="personGroup"
+                                        watch={watch}
                                         openModalApiConnectionPost={() => HandleOpenModalPersonGroups('post')}
                                         openModalApiConnectionPut={() => HandleOpenModalPersonGroups('put')}
-                                    >
-                                        <option
-                                            value={''}
-                                        >
-                                            Nenhum
-                                        </option>
-                                        {personGroupState.personGroupsList.map((item: any) => (
-                                            <option
-                                                key={item.id}
-                                                value={item.id}
-                                            >
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </Select> */}
+                                    />
                                 </Form.BreakLine>
-                                {/* <Select
+                                <Select
                                     label="Estado*"
                                     customStyle="max-w-[200px]"
                                     onChange={e => setCityState(prevState => ({ ...prevState, brStates: e.target.value }))}
@@ -189,13 +133,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
                                             {name}
                                         </option>
                                     ))}
-                                </Select> */}
-                                <Select
-                                    label="Estados"
-                                    options={personGroupState.personGroupsList}
-                                    setValue={setCityState}
-
-                                />
+                                </Select>
                             </Form.ContentField>
                             <Form.ContentField>
                                 <Form.GroupContainer
@@ -208,69 +146,22 @@ const PersonForm: React.FC<PersonFormProps> = ({
                     )}
                     {currentPersonSection == 'secundários' && (
                         <Form.ContentField>
-
-                            <Form.BreakLine>
-                                <TextField
-                                    id="razao"
-                                    label="Razão"
-                                    register={register}
-                                    error={errors.razao?.message}
-                                />
-                                <TextField
-                                    id="ibge"
-                                    label="IBGE"
-                                    register={register}
-                                    error={errors.ibge?.message}
-                                />
-                            </Form.BreakLine>
-                            <Form.BreakLine>
-                                <TextField
-                                    id="age"
-                                    label="Idade"
-                                    type="number"
-                                    register={register}
-                                    error={errors.age?.message}
-                                />
-                                <TextField
-                                    id="inscricaoEstadual"
-                                    label="Inscrição Estadual"
-                                    register={register}
-                                    error={errors.inscricaoEstadual?.message}
-                                />
-                            </Form.BreakLine>
-                            <Form.BreakLine>
-                                <TextField
-                                    id="birthDate"
-                                    label="Data de Nascimento"
-                                    register={register}
-                                    error={errors.birthDate?.message}
-                                />
-                                <TextField
-                                    id="maritalStatus"
-                                    label="Estado Civil"
-                                    register={register}
-                                    error={errors.maritalStatus?.message}
-                                />
-                            </Form.BreakLine>
-                            <Form.BreakLine>
-                                <TextField
-                                    id="description"
-                                    label="Descrição"
-                                    register={register}
-                                    error={errors.description?.message}
-                                />
-                                <ImageUpload
-                                    onChange={value => setValue("urlImage", value)}
-                                    value={urlImage ? urlImage : ''}
-                                />
-                            </Form.BreakLine>
-
+                            <SecondaryInputFields
+                                errors={errors}
+                                register={register}
+                            />
+                            <ImageUpload
+                                onChange={value => setValue("urlImage", value)}
+                                value={urlImage ? urlImage : ''}
+                            />
                         </Form.ContentField>
                     )}
                 </Form.ContentContainer>
 
                 <Form.Footer className="" >
-                    <Button customStyle="w-[200px] rounded-md" variantColor="green" type="submit">Cadastrar</Button>
+                    <Button customStyle="max-w-[200px] rounded-md text-xl" variantColor="green" type="submit">
+                        Cadastrar
+                    </Button>
                 </Form.Footer>
             </Form.Root>
             {personGroupState.isOpenModal && (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input, Select } from '../Inputs';
+import { BasicInput, Select } from '../Inputs';
 import { Button } from '../Buttons';
 import { Search } from 'lucide-react';
 import { Column } from './BasicTable';
@@ -73,7 +73,7 @@ const FilterForTable: React.FC<FilterForTableProps> = ({
                     gap-2
                     '
             >
-                <Input
+                <BasicInput
                     id="Id"
                     label={currentLabelName}
                     onChange={e => setIsSearchTermName(e.target.value)}
@@ -83,6 +83,7 @@ const FilterForTable: React.FC<FilterForTableProps> = ({
                 <Select
                     onChange={e => setCurrentLabelName(e.target.value)}
                     label='Pesquisar por:'
+                    value={currentLabelName}
                 >
                     {columns.map(item => (
                         <option

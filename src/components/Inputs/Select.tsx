@@ -1,80 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '../Buttons';
-import { BasicInput } from '.';
+import { ReactNode, useState } from 'react';
 
 interface SelectProps {
-    options: any[];
     label: string;
-    setValue: Function;
-    id?: string;
-    customStyle?: string;
-    openModalApiConnectionPost?: () => void;
-    openModalApiConnectionPut?: () => void;
-    openModalApiConnectionGetList?: () => void;
+    onChange: (value: any) => void
+    disabled?: boolean;
+    id?: string
+    children: ReactNode
+    customStyle?: string
+    value?: any
 }
 
 const Select: React.FC<SelectProps> = ({
     label,
-    options,
-    setValue,
+    disabled,
+    onChange,
     id,
+    children,
     customStyle,
-    openModalApiConnectionPost,
-    openModalApiConnectionPut,
-    openModalApiConnectionGetList
+    value
 }) => {
-    const [inputValue, setInputValue] = useState('');
-    const [filteredOptions, setFilteredOptions] = useState<Array<string>>([]);
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-
-    useEffect(() => {
-        if (inputValue !== '') {
-            const lowerCaseInputValue = inputValue.toLowerCase();
-            const filtered = options
-                .filter(option => option.name.toLowerCase().includes(lowerCaseInputValue))
-                .slice(0, 5);
-            setFilteredOptions(filtered);
-        } else {
-            setFilteredOptions(options.slice(0, 5));
-        }
-    }, [inputValue, options]);
-
-    const handleOptionClick = (option: any) => {
-        setInputValue(option.name);
-        setValue(option);
-        setIsDropdownVisible(false); // Esconde a lista suspensa após a seleção
-    };
+    const [isFocused, setIsFocused] = useState(false);
 
     return (
-        <div className="flex flex-col w-full">
-            <div className="flex gap-1">
-                <div className='relative'
-                    onFocus={() => setIsDropdownVisible(true)}
-                    onBlur={() => setIsDropdownVisible(false)}
+        <div className="flex flex-col w-full h-[60px]">
+            <label htmlFor={id} className={`text-sm font-bold
+            ${isFocused && 'text-blue-500'}
+            `}>
+                {label}
+            </label>
+            <div className="relative">
+                <select
+                    id={id}
+                    onChange={onChange}
+                    disabled={disabled}
+                    value={value}
+                    autoComplete="true"
+                    className={`w-full p-2 border-2 border-neutral-400 
+                    rounded-md focus:outline-none focus:border-blue-500 ${customStyle}`}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                 >
-                    <BasicInput
-                        label={label}
-                        type='text'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        id={id}
-                        customStyle={customStyle}
-                    />
-                    {isDropdownVisible && (
-                        <ul className="absolute top-[120%] rounded-lg Fade drop-shadow-[0px_0px_1px_black] w-full font-medium">
-                            {filteredOptions.map((option: any) => (
-                                <li
-                                    key={option.id}
-                                    onClick={() => handleOptionClick(option)}
-                                    className='bg-neutral-100 p-2 even:bg-neutral-300 hover:bg-neutral-500 cursor-pointer'
-                                >
-                                    {option.name}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                {/* Botões e outras partes do componente... */}
+                    {children}
+                </select>
             </div>
         </div>
     );

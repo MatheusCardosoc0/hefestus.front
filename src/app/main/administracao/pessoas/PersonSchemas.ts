@@ -3,13 +3,10 @@ import { z } from "zod";
 export const citySchema = z.object({
     id: z.number().optional(),
     name: z.string().nonempty({ message: "O nome da cidade não pode estar vazio" }),
-    ibgeNumber: z.string().optional().refine((val) => {
-        if (val === undefined) return true;
-
-        return !Number.isNaN(parseInt(val, 10));
-    }, {
-        message: "Expected number, received a string"
-    }),
+    ibgeNumber: z.any().transform((val) => {
+        const number = Number(val);
+        return isNaN(number) ? 0 : number;
+    }).refine(val => !isNaN(val), { message: "IBGE Number deve ser um número válido" }),
     state: z.string().nonempty({ message: "O estado não pode estar vazio" }),
 });
 
@@ -36,7 +33,7 @@ export const personSchema = z.object({
     birthDate: z.string().optional(),
     ibge: z.string().optional(),
     razao: z.string().optional(),
-    inscricaoEstadual: z.string(),
+    inscricaoEstadual: z.string().optional(),
     cep: z.string().nonempty({ message: "O CEP não pode estar vazio" }),
     urlImage: z.string().optional(),
     isBlocked: z.boolean().optional(),

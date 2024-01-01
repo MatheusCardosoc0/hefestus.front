@@ -12,6 +12,7 @@ import { citySchema } from "../PersonSchemas";
 import { Modal } from "@/components/Modal";
 import useGetDataById from "@/hooks/api/useGetDataById";
 import { Button } from "@/components/Buttons";
+import useDeleteData from "@/hooks/api/useDeleteData";
 
 export type CityForm = z.infer<typeof citySchema>
 
@@ -70,6 +71,22 @@ const CityModal: React.FC<CityModalProps> = ({
 
     console.log(errors)
 
+    const DeleteCity = useDeleteData({
+        id: cityId,
+        urlApi: '/api/city/'
+    })
+
+
+    async function handleDeleteCity() {
+        await DeleteCity()
+
+        setCityState((prevState: any) => ({
+            ...prevState,
+            isOpenModal: false,
+            kitten: !prevState.kitten
+        }));
+    }
+
     return (
         <>
             <Modal.BlurEffect closeModalFunction={() => setCityState((prevState: any) => ({ ...prevState, isOpenModal: false }))} />
@@ -115,9 +132,18 @@ const CityModal: React.FC<CityModalProps> = ({
                         </Form.BreakLine>
                     </Form.ContentField>
 
-                    <Button variantColor="green" customStyle="mt-4" >
-                        {cityId ? "Alterar" : "Cadastrar"}
-                    </Button>
+                    <Form.Footer>
+                        <Button type="submit" variantColor="green" customStyle="mt-4" >
+                            {cityId ? "Alterar" : "Cadastrar"}
+                        </Button>
+                        {cityId > 0 && (
+                            <Button type="button" variantColor="red" customStyle="mt-4"
+                                onClick={() => handleDeleteCity()}
+                            >
+                                Remover
+                            </Button>
+                        )}
+                    </Form.Footer>
                 </Form.Root>
             </Modal.Root>
         </>

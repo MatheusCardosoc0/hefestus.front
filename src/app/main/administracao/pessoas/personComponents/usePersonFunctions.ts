@@ -36,9 +36,6 @@ export default function usePersonFunctions({
 
     const [currentIdCityOrPersonGroup, setCurrentIdCityOrPersonGroup] = useState(0)
 
-
-
-
     function HandleOpenModalPersonGroups(type: 'post' | 'put') {
         if (type == 'post') {
             setCurrentIdCityOrPersonGroup(0)
@@ -81,7 +78,6 @@ export default function usePersonFunctions({
         if (city) {
             setCityState((prevCityState: any) => ({ ...prevCityState, brStates: city.state }));
         }
-        console.log(city)
     }, [city])
 
 
@@ -93,20 +89,10 @@ export default function usePersonFunctions({
     })
 
 
-    const { submitData } = useSubmitDataPostOrPut({
-        urlApi: '/api/person',
-        urlReturn: '/main/administracao/pessoas'
-    })
 
-    function onSubmit(data: FormPersonData) {
-        console.log(data)
-        submitData({
-            data
-        })
-    }
 
     return {
-        onSubmit,
+
         HandleOpenModalCity,
         HandleOpenModalPersonGroups,
         cityState,

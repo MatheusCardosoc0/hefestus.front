@@ -25,7 +25,7 @@ const FormGroupContainer: React.FC<FormGroupContainerProps> = ({
 
     return (
         <div
-            className="w-full w-[220px] bg-white px-4 py-2 rounded-xl drop-shadow-[0px_0px_1px_#000000] flex flex-col gap-2"
+            className="w-[220px] bg-white px-4 py-2 rounded-xl drop-shadow-[0px_0px_1px_#000000] flex flex-col gap-2"
         >
             <h4 className=" text-black font-bold p-1 text-center border-b-2 pb-2 border-black text-xl">
                 Grupos
@@ -50,7 +50,7 @@ const FormGroupContainer: React.FC<FormGroupContainerProps> = ({
                         <Button
                             onClick={() => removeGroup(item)}
                             variantColor="black"
-                            customStyle=" rounded-full p-1 w-[40px]"
+                            customStyle=" rounded-full p-1 max-w-[32px]"
                         >
                             <Trash2 size={20} />
                         </Button>

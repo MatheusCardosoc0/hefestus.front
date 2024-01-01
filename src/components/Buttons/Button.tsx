@@ -26,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({
                 items-center
                 justify-center
                 gap-2
-                max-w-[200px]
+                w-full
                 ${customStyle}
                 ${variantColor === 'blue' && 'bg-blue-500 text-white hover:bg-blue-700'}
                 ${variantColor === 'orange' && 'bg-orange-500 text-white hover:bg-orange-700'}
