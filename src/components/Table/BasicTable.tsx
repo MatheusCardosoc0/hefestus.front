@@ -141,7 +141,7 @@ const BasicTable: React.FC<BasicTableProps> = ({
                             className='bg-white even:bg-neutral-200 drop-shadow-[1px_1px_1px_black] cursor-pointer hover:bg-cyan-400'
                         >
                             {columns.map((column, colIndex) => (
-                                <td key={colIndex} filteredData-label={column.label}
+                                <td key={colIndex}
                                     className='
                                         px-2
                                         py-2

@@ -17,6 +17,7 @@ interface AdvancedSelectProps {
     openModalApiConnectionPut?: () => void;
     openModalApiConnectionGetList?: () => void;
     secondaryOptions?: any[]
+    currentValue?: any
 }
 
 const AdvancedSelect: React.FC<AdvancedSelectProps> = ({
@@ -31,7 +32,8 @@ const AdvancedSelect: React.FC<AdvancedSelectProps> = ({
     openModalApiConnectionPut,
     openModalApiConnectionGetList,
     secondaryOptions,
-    trigger
+    trigger,
+    currentValue
 }) => {
     const [inputValue, setInputValue] = useState('');
     const [filteredOptions, setFilteredOptions] = useState<Array<string>>([]);
@@ -40,6 +42,10 @@ const AdvancedSelect: React.FC<AdvancedSelectProps> = ({
     const [isChangeOptions, setIsChangeOptions] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        if (currentValue) setInputValue(currentValue.name)
+    }, [currentValue])
 
     useEffect(() => {
         if (inputValue !== '') {

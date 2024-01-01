@@ -38,7 +38,7 @@ const CityModal: React.FC<CityModalProps> = ({
 
     const state = watch('state')
 
-    const { submitData } = useSubmitDataPostOrPut({
+    const { submitData, loading } = useSubmitDataPostOrPut({
         urlApi: '/api/city/',
         id: cityId
     })
@@ -92,7 +92,7 @@ const CityModal: React.FC<CityModalProps> = ({
             <Modal.BlurEffect closeModalFunction={() => setCityState((prevState: any) => ({ ...prevState, isOpenModal: false }))} />
 
             <Modal.Root>
-                <Modal.Title>Cadastrar nova cidade</Modal.Title>
+                <Modal.Title>{cityId ? 'Alterar cidade' : 'Cadastrar nova cidade'}</Modal.Title>
                 <Form.Root
                     onSubmit={handleSubmit(onSubmit)}
                 >
@@ -133,16 +133,11 @@ const CityModal: React.FC<CityModalProps> = ({
                     </Form.ContentField>
 
                     <Form.Footer>
-                        <Button type="submit" variantColor="green" customStyle="mt-4" >
-                            {cityId ? "Alterar" : "Cadastrar"}
-                        </Button>
-                        {cityId > 0 && (
-                            <Button type="button" variantColor="red" customStyle="mt-4"
-                                onClick={() => handleDeleteCity()}
-                            >
-                                Remover
-                            </Button>
-                        )}
+                        <Form.DefaultActions
+                            id={cityId}
+                            removeFunction={() => handleDeleteCity()}
+                            loading={loading}
+                        />
                     </Form.Footer>
                 </Form.Root>
             </Modal.Root>

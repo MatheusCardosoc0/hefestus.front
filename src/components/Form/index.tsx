@@ -1,6 +1,7 @@
 import FormBreakLine from "./FormBreakLine";
 import FormContentContainer from "./FormContentContainer";
 import FormContentField from "./FormContentField";
+import FormDefaultActions from "./FormDefaultActions";
 import FormFooter from "./FormFooter";
 import FormGroupContainer from "./FormGroupContainer";
 import FormNavbarSections from "./FormNavbarSections";
@@ -15,5 +16,6 @@ export const Form = {
     ContentContainer: FormContentContainer,
     BreakLine: FormBreakLine,
     NavbarSections: FormNavbarSections,
-    GroupContainer: FormGroupContainer
+    GroupContainer: FormGroupContainer,
+    DefaultActions: FormDefaultActions
 }

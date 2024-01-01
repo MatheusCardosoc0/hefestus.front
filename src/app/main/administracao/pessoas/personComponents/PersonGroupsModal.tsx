@@ -12,6 +12,7 @@ import { Form } from "@/components/Form";
 import { Loader2 } from "lucide-react";
 import useGetDataById from "@/hooks/api/useGetDataById";
 import { Button } from "@/components/Buttons";
+import useDeleteData from "@/hooks/api/useDeleteData";
 
 export type PersonGroupForm = z.infer<typeof personGroupSchema>
 
@@ -65,12 +66,27 @@ const PersonGroupsModal: React.FC<PersonGroupsModalProps> = ({
 
     }
 
+    const DeletePersonGroup = useDeleteData({
+        id: personGroupId,
+        urlApi: '/api/personGroup/'
+    })
+
+    async function handleDeletePersonGroup() {
+        await DeletePersonGroup()
+
+        setPersonGroupState((prevState: any) => ({
+            ...prevState,
+            isOpenModal: false,
+            kitten: !prevState.kitten
+        }));
+    }
+
     return (
         <>
             <Modal.BlurEffect closeModalFunction={() => setPersonGroupState((prevState: any) => ({ ...prevState, isOpenModal: false }))} />
 
             <Modal.Root>
-                <Modal.Title>Criar novo grupo de pessoas</Modal.Title>
+                <Modal.Title>{personGroupId ? 'Alterar grupo de pessoas' : 'Criar novo grupo de pessoas'}</Modal.Title>
                 <Form.Root
                     onSubmit={handleSubmit(onSubmit)}
                 >
@@ -82,12 +98,13 @@ const PersonGroupsModal: React.FC<PersonGroupsModalProps> = ({
                         disabled={isLoading}
                     />
 
-                    <Button variantColor="green" customStyle="mt-4" type="submit" >
-                        {loading && (
-                            <Loader2 className="animate-spin" />
-                        )}
-                        {personGroupId ? "Alterar" : "Cadastrar"}
-                    </Button>
+                    <Form.Footer>
+                        <Form.DefaultActions
+                            id={personGroupId}
+                            loading={loading}
+                            removeFunction={() => handleDeletePersonGroup()}
+                        />
+                    </Form.Footer>
                 </Form.Root>
             </Modal.Root>
         </>

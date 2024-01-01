@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../libs/api';
+import toast from 'react-hot-toast';
+import { ApiError } from '@/@types/ApiError';
 
 interface UseGetDataByIdProps {
     id: string | number;
@@ -17,13 +19,11 @@ const useGetDataById = ({
     stateKey
 }: UseGetDataByIdProps) => {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (id && activate) {
             const getData = async () => {
                 setLoading(true);
-                setError(null);
                 try {
                     const response = await api.get(`${urlApi}${id}`);
                     let data = response.data
@@ -35,8 +35,17 @@ const useGetDataById = ({
                     if (!stateKey) {
                         setData(response.data);
                     }
+
+                    console.log(data)
                 } catch (error: any) {
-                    setError(error);
+                    const apiError = error as ApiError
+                    if (apiError.response) {
+                        const apiErrorMessage = apiError.response.data || 'Erro desconhecido ao processar a solicitação';
+                        toast.error(apiErrorMessage);
+                    } else {
+                        toast.error("Erro ao tentar remover");
+                    }
+                    console.log(error);
                 } finally {
                     setLoading(false);
                 }
@@ -45,7 +54,7 @@ const useGetDataById = ({
             getData();
         }
     }, [id, activate]);
-    return { loading, error };
+    return { loading };
 };
 
 export default useGetDataById;

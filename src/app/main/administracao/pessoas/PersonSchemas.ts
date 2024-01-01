@@ -21,13 +21,10 @@ export const personSchema = z.object({
     name: z.string().nonempty({ message: "O nome não pode estar vazio" }),
     email: z.string().email({ message: "Formato de e-mail inválido" }),
     phone: z.string().nonempty({ message: "O telefone não pode estar vazio" }),
-    age: z.string().optional().refine((val) => {
-        if (val === undefined) return true;
-
-        return !Number.isNaN(parseInt(val, 10));
-    }, {
-        message: "Expected number, received a string"
-    }),
+    age: z.any().transform((val) => {
+        const number = Number(val);
+        return isNaN(number) ? 0 : number;
+    }).refine(val => !isNaN(val), { message: "IBGE Number deve ser um número válido" }),
     cpf: z.string().nonempty({ message: "O CPF não pode estar vazio" }),
     address: z.string().nonempty({ message: "O endereço não pode estar vazio" }),
     birthDate: z.string().optional(),
@@ -40,7 +37,7 @@ export const personSchema = z.object({
     maritalStatus: z.string().optional(),
     habilities: z.string().optional(),
     description: z.string().optional(),
-    personGroup: z.array(personGroupSchema).nonempty("Deve ser informado ao menos um grupo"),
+    personGroups: z.array(personGroupSchema).nonempty("Deve ser informado ao menos um grupo"),
     cityId: z.number().min(0, { message: "O ID da cidade não pode ser negativo" }).optional(),
     city: citySchema,
 });

@@ -15,13 +15,15 @@ import { Button } from "@/components/Buttons";
 import SecondaryInputFields from "./SecondaryInputFields";
 import PrimaryInputFields from "./PrimaryInputFields";
 import useSubmitDataPostOrPut from "@/hooks/api/useSubmitDataPostOrPut";
+import useDeleteData from "@/hooks/api/useDeleteData";
+import useGetDataById from "@/hooks/api/useGetDataById";
 
 interface PersonFormProps {
-    id?: number | string
+    personId?: any
 }
 
 const PersonForm: React.FC<PersonFormProps> = ({
-    id
+    personId
 }) => {
 
     const {
@@ -33,15 +35,15 @@ const PersonForm: React.FC<PersonFormProps> = ({
     } = useForm<FormPersonData>({
         defaultValues: {
             isBlocked: false,
-            age: '0',
-            personGroup: []
+            age: 0,
+            personGroups: []
         },
         resolver: zodResolver(personSchema)
     })
 
     const urlImage = watch('urlImage')
 
-    const personGroup = watch('personGroup')
+    const personGroup = watch('personGroups')
     const city = watch('city')
 
     const [currentPersonSection, setCurrentPersonSection] = useState<'principais' | 'secundários'>('principais')
@@ -61,17 +63,36 @@ const PersonForm: React.FC<PersonFormProps> = ({
         setValue
     })
 
-    const { submitData } = useSubmitDataPostOrPut({
-        urlApi: '/api/person',
-        urlReturn: '/main/administracao/pessoas'
+    const { submitData, loading } = useSubmitDataPostOrPut({
+        urlApi: '/api/person/',
+        urlReturn: '/main/administracao/pessoas',
+        id: personId
     })
 
-    function onSubmit(data: FormPersonData) {
+    async function onSubmit(data: FormPersonData) {
         console.log(data)
-        submitData({
+        await submitData({
             data
         })
     }
+
+    const DeletePerson = useDeleteData({
+        id: personId,
+        urlApi: '/api/person/'
+    })
+
+    useGetDataById({
+        id: personId,
+        urlApi: '/api/person/',
+        setData: (data) => {
+            if (data) {
+                Object.keys(data).forEach((key: any) => {
+                    setValue(key, data[key], { shouldValidate: true });
+                });
+            }
+        },
+        activate: !!personId
+    });
 
     console.log(errors)
 
@@ -108,6 +129,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
                                         openModalApiConnectionGetList={() => setCityState(prevState => ({ ...prevState, triggerCity: !prevState.triggerCity }))}
                                         trigger={cityState.triggerCity}
                                         secondaryOptions={cityState.citiesIBGEList}
+                                        currentValue={city}
                                     />
                                     <AdvancedSelect
                                         label="Grupo*"
@@ -158,10 +180,12 @@ const PersonForm: React.FC<PersonFormProps> = ({
                     )}
                 </Form.ContentContainer>
 
-                <Form.Footer className="" >
-                    <Button customStyle="max-w-[200px] rounded-md text-xl" variantColor="green" type="submit">
-                        Cadastrar
-                    </Button>
+                <Form.Footer>
+                    <Form.DefaultActions
+                        id={personId}
+                        loading={loading}
+                        removeFunction={() => DeletePerson()}
+                    />
                 </Form.Footer>
             </Form.Root>
             {personGroupState.isOpenModal && (

@@ -1,9 +1,18 @@
-import React from 'react'
+import PersonForm from "../../personComponents/PersonForm"
 
-function page() {
+interface IParams {
+    id: string
+}
+
+
+function ChangePerson({ params }: { params: IParams }) {
+
+
     return (
-        <div>page</div>
+        <PersonForm
+            personId={params.id}
+        />
     )
 }
 
-export default page
+export default ChangePerson
