@@ -1,6 +1,7 @@
-import { HTMLInputTypeAttribute, InputHTMLAttributes, useState } from 'react';
+import { HTMLInputTypeAttribute, InputHTMLAttributes, useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { UseFormRegister } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
@@ -29,6 +30,10 @@ const TextField: React.FC<TextFieldProps> = ({
     const toggleVisibility = () => {
         setTypeTextField(prev => prev === 'password' ? 'text' : 'password');
     };
+
+    useEffect(() => {
+        if (error) toast.error(error)
+    }, [error])
 
     return (
         <div className="flex flex-col w-full h-[60px]">

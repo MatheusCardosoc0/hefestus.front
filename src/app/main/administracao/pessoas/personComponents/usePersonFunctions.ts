@@ -1,23 +1,17 @@
-import { Dispatch, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PersonGroupForm } from "./PersonGroupsModal";
 import useGetDataById from "@/hooks/api/useGetDataById";
 import { useGetDataList } from "@/hooks/api/useGetDataList";
 import { CityForm } from "./CityModal";
-import { FormPersonData, personSchema } from "../PersonSchemas";
-import useSubmitDataPostOrPut from "@/hooks/api/useSubmitDataPostOrPut";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UsePersonFunctionsProps {
     city: CityForm,
     personGroup: PersonGroupForm[]
-    setValue: Function
 }
 
 export default function usePersonFunctions({
     city,
-    personGroup,
-    setValue
+    personGroup
 }: UsePersonFunctionsProps) {
 
     const [cityState, setCityState] = useState({

@@ -23,6 +23,7 @@ const ModalRoot: React.FC<ModalRootProps> = ({
                 flex
                 flex-col
                 gap-3
+                z-20
             "
         >
             {children}

@@ -24,22 +24,22 @@ export const personSchema = z.object({
     age: z.any().transform((val) => {
         const number = Number(val);
         return isNaN(number) ? 0 : number;
-    }).refine(val => !isNaN(val), { message: "IBGE Number deve ser um número válido" }),
+    }).refine(val => !isNaN(val), { message: "Idade deve ser um número válido" }),
     cpf: z.string().nonempty({ message: "O CPF não pode estar vazio" }),
     address: z.string().nonempty({ message: "O endereço não pode estar vazio" }),
-    birthDate: z.string().optional(),
-    ibge: z.string().optional(),
-    razao: z.string().optional(),
-    inscricaoEstadual: z.string().optional(),
+    birthDate: z.string().nullable().optional(),
+    ibge: z.string().nullable().optional(),
+    razao: z.string().nullable().optional(),
+    inscricaoEstadual: z.string().nullable().optional(),
     cep: z.string().nonempty({ message: "O CEP não pode estar vazio" }),
-    urlImage: z.string().optional(),
+    urlImage: z.string().nullable().optional(),
     isBlocked: z.boolean().optional(),
-    maritalStatus: z.string().optional(),
-    habilities: z.string().optional(),
-    description: z.string().optional(),
+    maritalStatus: z.string().nullable().optional(),
+    habilities: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
     personGroups: z.array(personGroupSchema).nonempty("Deve ser informado ao menos um grupo"),
     cityId: z.number().min(0, { message: "O ID da cidade não pode ser negativo" }).optional(),
-    city: citySchema,
+    city: citySchema
 });
 
 export type FormPersonData = z.infer<typeof personSchema>

@@ -52,11 +52,19 @@ const useSubmitDataPostOrPut = ({ urlApi, urlReturn, id }: UseSubmitDataPostOrPu
             }
             if (urlReturn) { router.push(urlReturn); }
         } catch (error: any) {
-            const apiError = error as ApiError
-            if (apiError.response) {
-                const apiErrorMessage = apiError.response.data || 'Erro desconhecido ao processar a solicitação';
+            const apiError = error as ApiError;
+            if (apiError.response && apiError.response.data && apiError.response.data.errors) {
+                // Extrair mensagens de erro de validação
+                const validationErrors = apiError.response.data.errors;
+                const errorMessages = Object.keys(validationErrors).map(key => `${key}: ${validationErrors[key].join(', ')}`);
+                const combinedErrorMessage = errorMessages.join('\n');
+                toast.error(combinedErrorMessage);
+            } else if (apiError.response && apiError.response.data) {
+                // Erro genérico do servidor
+                const apiErrorMessage = apiError.response.data.message || 'Erro desconhecido ao processar a solicitação';
                 toast.error(apiErrorMessage);
             } else {
+                // Erro de rede ou desconhecido
                 toast.error(messageError);
             }
             console.log(error);

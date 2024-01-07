@@ -11,7 +11,6 @@ import { Form } from "@/components/Form";
 import { FormPersonData, personSchema } from "../PersonSchemas";
 import usePersonFunctions from "./usePersonFunctions";
 import { useState } from "react";
-import { Button } from "@/components/Buttons";
 import SecondaryInputFields from "./SecondaryInputFields";
 import PrimaryInputFields from "./PrimaryInputFields";
 import useSubmitDataPostOrPut from "@/hooks/api/useSubmitDataPostOrPut";
@@ -48,7 +47,6 @@ const PersonForm: React.FC<PersonFormProps> = ({
 
     const [currentPersonSection, setCurrentPersonSection] = useState<'principais' | 'secundários'>('principais')
 
-
     const {
         HandleOpenModalCity,
         HandleOpenModalPersonGroups,
@@ -59,8 +57,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
         currentIdCityOrPersonGroup
     } = usePersonFunctions({
         city,
-        personGroup,
-        setValue
+        personGroup
     })
 
     const { submitData, loading } = useSubmitDataPostOrPut({
@@ -78,8 +75,11 @@ const PersonForm: React.FC<PersonFormProps> = ({
 
     const DeletePerson = useDeleteData({
         id: personId,
-        urlApi: '/api/person/'
+        urlApi: '/api/person/',
+        urlReturn: '/main/administracao/pessoas'
     })
+
+    console.log(errors)
 
     useGetDataById({
         id: personId,
@@ -94,7 +94,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
         activate: !!personId
     });
 
-    console.log(errors)
+
 
     return (
         <>
@@ -135,7 +135,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
                                         label="Grupo*"
                                         options={personGroupState.personGroupsList}
                                         setValue={setValue}
-                                        keyState="personGroup"
+                                        keyState="personGroups"
                                         watch={watch}
                                         openModalApiConnectionPost={() => HandleOpenModalPersonGroups('post')}
                                         openModalApiConnectionPut={() => HandleOpenModalPersonGroups('put')}
@@ -160,7 +160,7 @@ const PersonForm: React.FC<PersonFormProps> = ({
                             <Form.ContentField>
                                 <Form.GroupContainer
                                     setValueGroup={setValue}
-                                    stateKey="personGroup"
+                                    stateKey="personGroups"
                                     group={personGroup}
                                 />
                             </Form.ContentField>

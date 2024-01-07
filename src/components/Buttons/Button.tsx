@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from "react"
+import { ReactNode } from "react"
 
 interface ButtonProps {
     children: ReactNode
@@ -6,6 +6,7 @@ interface ButtonProps {
     variantColor?: 'blue' | 'yellow' | 'red' | 'green' | 'white' | 'orange' | 'black'
     type?: "submit" | "reset" | "button"
     onClick?: () => void
+    title?: string
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -13,11 +14,13 @@ const Button: React.FC<ButtonProps> = ({
     customStyle,
     variantColor = 'blue',
     type = 'button',
-    onClick
+    onClick,
+    title
 }) => {
     return (
         <button
             type={type}
+            title={title}
             onClick={onClick}
             className={`
                 p-2     

@@ -153,14 +153,14 @@ const BasicTable: React.FC<BasicTableProps> = ({
                                 >
                                     <div
                                         className='
-                                                    flex
-                                                    justify-between
-                                                    w-full
-                                                    gap-8
-                                                '
+                                            flex
+                                            justify-between
+                                            w-full
+                                            gap-8
+                                        '
                                     >
 
-                                        {formatCellValue(row[column.field])}
+                                        {formatCellValue(row[column.field]) || 'Nenhum'}
                                         <span>
                                             |
                                         </span>

@@ -7,7 +7,7 @@ const FormContentContainer: React.FC<FormContentContainerProps> = ({
 }) => {
     return (
         <div
-            className="flex w-full justify-center gap-8"
+            className="flex w-full justify-center gap-8 my-12"
         >
             {children}
         </div>

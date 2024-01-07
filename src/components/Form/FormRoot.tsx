@@ -16,7 +16,6 @@ const FormRoot: React.FC<FormRootProps> = ({
             className={`
               flex
               flex-col
-              gap-12
               ${className}
             `}
             onSubmit={onSubmit}

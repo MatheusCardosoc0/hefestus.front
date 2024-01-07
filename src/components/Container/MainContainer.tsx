@@ -1,7 +1,7 @@
 "use client"
 
 import { useIsOpenSectionOptionsMenu } from "@/hooks/context/useIsOpenSectionOptionsMenu"
-import { ReactNode, useState } from "react"
+import { ReactNode } from "react"
 import { Button } from "../Buttons"
 import { usePathname, useRouter } from "next/navigation"
 import { extractNameFromUrl } from "@/functions/extractNameFromUrl"
@@ -10,7 +10,6 @@ import { ClipboardList, UserPlus } from "lucide-react"
 const MainContainer = ({ children }: { children: ReactNode }) => {
 
     const { setIsOpen } = useIsOpenSectionOptionsMenu()
-    const [isOpenOptionsNavigationMenu, setIsOpenOptionsNavigationMenu] = useState(false)
 
     const url = usePathname()
 
@@ -36,7 +35,6 @@ const MainContainer = ({ children }: { children: ReactNode }) => {
         }
 
         const newPath = '/' + pathSegments.join('/');
-        setIsOpenOptionsNavigationMenu(false)
         router.push(newPath);
     }
 
@@ -63,59 +61,49 @@ const MainContainer = ({ children }: { children: ReactNode }) => {
                     text-2xl
                     font-bold
                     text-white
-                    p-2
+                    py-1
+                    px-2
                     flex
                     justify-between
                     relative
+                    items-center
                 "
             >
                 <h2>
                     {extractNameFromUrl(url)}
                 </h2>
                 {!url.includes("dashboard") && (
-                    <Button
-                        onClick={() => setIsOpenOptionsNavigationMenu(prev => !prev)}
-                        variantColor="white"
-                        customStyle="text-sm max-w-[100px] rounded-lg"
-                    >
-                        Opções
-                    </Button>
-                )}
-                {isOpenOptionsNavigationMenu && (
                     <ul
                         className="
-                        w-[168px]
-                        absolute
-                        top-16
-                        right-1
-                        bg-black
-                        rounded-lg
-                        p-1
-                        Fade
-                        z-10
-                        gap-1
-                        flex
-                        flex-col
-                      "
+                            flex
+                            top-16
+                            right-1
+                            bg-black
+                            rounded-lg
+                            p-1
+                            Fade
+                            z-10
+                            gap-3
+                        "
                     >
                         {(url.includes("new") || url.includes("change")) && (
                             <Button
                                 variantColor="blue"
-                                customStyle="text-base"
+                                customStyle="rounded-full"
                                 onClick={() => RedirectOption()}
+                                title="Buscar"
                             >
-                                <ClipboardList />
-                                Pesquisar
+                                <ClipboardList size={28} />
                             </Button>
                         )}
                         {!url.includes("new") && (
                             <Button
                                 variantColor="green"
-                                customStyle="text-base"
+                                customStyle="rounded-full"
                                 onClick={() => RedirectOption('new')}
+                                title="Cadastrar"
                             >
-                                <UserPlus />
-                                Cadastrar
+                                <UserPlus size={28} />
                             </Button>
                         )}
                     </ul>

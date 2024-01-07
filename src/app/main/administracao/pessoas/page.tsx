@@ -5,11 +5,10 @@ import { useGetDataList } from "@/hooks/api/useGetDataList"
 import { useState } from "react";
 
 function Pessoas() {
-
     const [allPersons, setAllPersons] = useState([]);
     const [filteredPersons, setFilteredPersons] = useState([]);
 
-    const { error, loading } = useGetDataList({
+    const { loading } = useGetDataList({
         setData: setAllPersons,
         setDataFilter: setFilteredPersons,
         url: 'api/person'
@@ -27,7 +26,7 @@ function Pessoas() {
                 { label: "Email", field: "email" },
                 { label: "Telefone", field: "phone" },
                 { label: "Idade", field: "age" },
-                { label: "CPF", field: "cpf" },
+                { label: "CPF/CNPJ", field: "cpf" },
                 { label: "Endereço", field: "address" },
                 { label: "Data de Nascimento", field: "birthDate" },
                 { label: "IBGE", field: "ibge" },

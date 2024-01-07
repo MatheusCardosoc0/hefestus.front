@@ -7,7 +7,7 @@ export const extractNameFromUrl = (url: string) => {
     if (segments.length > 3 && segments[segments.length - 2] === 'change') {
         name = segments[segments.length - 3].slice(0, -1) + ' ' + segments[segments.length - 1];
     } else if (segments.length > 2 && (segments[segments.length - 1] === 'new')) {
-        name = 'Nova ' + capitalizeFirstLetter(segments[segments.length - 2].slice(0, -1));
+        name = 'Criar ' + capitalizeFirstLetter(segments[segments.length - 2].slice(0, -1));
     } else {
         name = segments[segments.length - 1] || '';
     }
